@@ -1,0 +1,25 @@
+{
+  "58tc": {
+    "accounts": [
+      {
+        "name": "wsfsp",
+        "cookie": "PPU=UID=87184303599364&UN=mhb4dvvuw&TT=3f582ad8bf00ec868ac1675af6b0ac95&PBODY=B5sEriZ3ieie5o0MMhI2hdajNoWhPbp-qILjA8V8V09oR1dbAUmOOUN46c0ohLHaYo3b3kCgwxzzcM18pRaWhZrso3TK0N1svXr9pw92gJNiC3k28vV8iRL-TY8ZR3Qp776KX5fSzrHbFHjE8HqVVzjomir91wgHKqcdyyDdb0Y&VER=1&CUID=WrQANVfdNmnaohX-mItkLA"
+      },
+      {
+        "name": "yanchun",
+        "cookie": "PPU=UID=72735088597536&UN=49m6mmcbd&TT=496dac53fe0b37dca3255f5d562e35e2&PBODY=eQYPgGvBZ0TY_8aqlWYyy4oYRufiCNqkkG410PoJrJqqq4hwjgVWvCY2yO2jAIikavTJ0t9zjPG1wCsyhQVkIKCZDsPO9SDzdVVvNnR_VeF72zIt_zyaxyIpbVdustbnYEX28hJ0zQ9XOXjmSpwG3z-VTjJn6WpJSdXqALYf9UA&VER=1&CUID=TA44wDLs8y9FBwCtJZ1eYw"
+      },
+      {
+        "name": "",
+        "cookie": ""
+      },
+      {
+        "name": "",
+        "cookie": ""
+      }
+    ],
+    "config": {
+      "notify": 0
+    }
+  }
+}

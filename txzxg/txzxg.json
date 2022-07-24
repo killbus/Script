@@ -1,0 +1,40 @@
+{
+  "accounts": [
+    {
+      "name": "wsfsp",
+      "openid": "oA0Gbjvfd1aIn8k5s4JZ6ZqaB6qo",
+      "fskey": "v0ba82b202262580587e979fb5d6f1eb",
+      "wzq_qlskey": "v0ba82b0e226258046af0d160a0e7e95",
+      "wzq_qluin": "os-ppuJNInVqmulYLbGUO-5SHx4M"
+    },
+    {
+      "name": "",
+      "openid": "",
+      "fskey": "",
+      "wzq_qlskey": "",
+      "wzq_qluin": ""
+    },
+    {
+      "name": "",
+      "openid": "",
+      "fskey": "",
+      "wzq_qlskey": "",
+      "wzq_qluin": ""
+    },
+    {
+      "name": "",
+      "openid": "",
+      "fskey": "",
+      "wzq_qlskey": "",
+      "wzq_qluin": ""
+    },
+    {
+      "name": "",
+      "openid": "",
+      "fskey": "",
+      "wzq_qlskey": "",
+      "wzq_qluin": ""
+    }
+  ],
+  "projectNameCN": "\u817e\u8baf\u81ea\u9009\u80a1"
+}

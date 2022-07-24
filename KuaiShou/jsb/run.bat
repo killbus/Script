@@ -1,0 +1,1 @@
+python E:\Editor\Python\Script\KuaiShou\jsb\ksjsb.py
