@@ -67,7 +67,6 @@ class User:
             print("登录失败：{0}".format(rjson['error_msg']))
 
     # 签到信息
-
     def signInfo(self):
         url = "https://encourage.kuaishou.com/rest/wd/encourage/signIn/info"
         rjson = self.get(url)
@@ -83,6 +82,7 @@ class User:
         else:
             print("获取签到信息失败：{0}".format(rjson['error_msg']))
 
+    #签到
     def sign(self, id):
         url = "https://encourage.kuaishou.com/rest/wd/encourage/signIn/report"
         body = {"signInBizId": id}
