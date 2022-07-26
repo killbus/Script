@@ -12,6 +12,7 @@ class User:
 
     def __init__(self,cookie,index=1) -> None:
         self.cookie = cookie
+        self.valid = True
         self.index = index
 
     # 统一GET 额外header用字典传递
@@ -32,7 +33,6 @@ class User:
             return None
 
     # 统一POST 额外header用字典传递
-
     def post(self, url, body='', header=None):
         headers = {
             "Content-Type": "application/json",
@@ -54,6 +54,7 @@ class User:
         url = "https://encourage.kuaishou.com/rest/wd/encourage/home"
         rjson = self.get(url)
         if(not rjson):
+            self.valid = False
             return
         self.basicInfo = {}
         if(rjson['result'] == 1):
