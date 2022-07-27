@@ -1384,34 +1384,34 @@ if __name__ == "__main__":
         checkUserState(account)
         print("{0}".format(10*'——'))
 
-    # print("\n\n{0}现金签到{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     cashSigninlist(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}现金签到{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        cashSigninlist(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}神奇矿主页{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     mainHome(account)
-    #     mainSignExtra(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}神奇矿主页{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        mainHome(account)
+        mainSignExtra(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}每日抽奖{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     rouletteInfo(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}每日抽奖{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        rouletteInfo(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}关注服务号{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     getRecFollowList(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}关注服务号{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        getRecFollowList(account)
+        print("{0}".format(10*'——'))
 
     print("\n\n{0}场景任务{0}".format(8*'='))
     for account in accounts:
@@ -1427,52 +1427,52 @@ if __name__ == "__main__":
         motivateInfo(account)
         print("{0}".format(10*'——'))
 
-    # print("\n\n{0}我的家{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     houseInfo(account)
-    #     houseWork(account)
-    #     houseWorkState(account)
-    #     houseWithdrawPage(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}我的家{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        houseInfo(account)
+        houseWork(account)
+        houseWorkState(account)
+        houseWithdrawPage(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}梦想小镇{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     dreamtownScence(account)
-    #     dreamtownSign(account)
-    #     dreamtownMonopolyInfo(account)
-    #     dreamtownEnter(account)
-    #     dreamtownSpeed(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}梦想小镇{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        dreamtownScence(account)
+        dreamtownSign(account)
+        dreamtownMonopolyInfo(account)
+        dreamtownEnter(account)
+        dreamtownSpeed(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}矿工{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     mineInfo(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}矿工{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        mineInfo(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}神奇矿山{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     miningUserInfo(account)
-    #     miningStealList(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}神奇矿山{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        miningUserInfo(account)
+        miningStealList(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}早起打卡{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     attendanceDetail(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}早起打卡{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        attendanceDetail(account)
+        print("{0}".format(10*'——'))
 
-    # print("\n\n{0}矿石竞拍{0}".format(8*'='))
-    # for account in accounts:
-    #     if(not account['normal']):
-    #         continue
-    #     auctionInfo(account)
-    #     print("{0}".format(10*'——'))
+    print("\n\n{0}矿石竞拍{0}".format(8*'='))
+    for account in accounts:
+        if(not account['normal']):
+            continue
+        auctionInfo(account)
+        print("{0}".format(10*'——'))
