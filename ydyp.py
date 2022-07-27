@@ -761,8 +761,9 @@ class SDK:
             print("上传文件失败")
 
     def upFileEnter(self):
-        redirectionUrl, uploadtaskID, fName = self.getUpInfo()
-        if(redirectionUrl and uploadtaskID):
+        info = self.getUpInfo()
+        if(info):
+            redirectionUrl, uploadtaskID, fName = info
             self.upFile(redirectionUrl, uploadtaskID, fName)
 
     def getCatalog(self, catalogID="00019700101000000001"):
