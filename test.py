@@ -24,8 +24,6 @@ def getDict(params):
             k_v = kv.strip().split("=")
             if(len(k_v)==2):
                 d[k_v[0]] = k_v[1]
-            # else:
-            #     d[k_v[0]] = ""
         return d
     return {}
 
