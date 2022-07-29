@@ -529,8 +529,10 @@ class User:
     def invite(users):
         print("》》》》果园助力")
         for userA in users:
+            if(not userA.authorizationValid):
+                continue
             for userB in users:
-                if(userA.account['phone'] == userB.account['phone'] or "gyInviteCode" not in userB.account):
+                if(not userB.authorizationValid or  userA.account['phone'] == userB.account['phone'] or "gyInviteCode" not in userB.account):
                     continue
                 else:
                     userA.gyInviteFriend(
