@@ -22,11 +22,11 @@ class User:
         headers = {
             "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; TAS-AL00 Build/N2G48C; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.198 Mobile Safari/537.36 MMWEBID/4561 MicroMessenger/8.0.2.1860(0x28000234) Process/appbrand0 WeChat/arm32 Weixin NetType/WIFI Language/zh_CN ABI/arm32 MiniProgramEnv/android",
-            "referer": "https://servicewechat.com/wxde8ac0a21135c07d/1011/page-frame.html",
             "m-appkey": "wxmp_mt-weapp",
             "accept-encoding": "gzip, deflate, br",
             "connection": "keep-alive",
-            "token": self.cookie['token']
+            "token": self.cookie['token'],
+            "uuid":self.cookie['uuid']
         }
         if(header):
             headers.update(header)
@@ -41,11 +41,11 @@ class User:
         headers = {
             "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; TAS-AL00 Build/N2G48C; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.198 Mobile Safari/537.36 MMWEBID/4561 MicroMessenger/8.0.2.1860(0x28000234) Process/appbrand0 WeChat/arm32 Weixin NetType/WIFI Language/zh_CN ABI/arm32 MiniProgramEnv/android",
-            "referer": "https://servicewechat.com/wxde8ac0a21135c07d/1011/page-frame.html",
             "m-appkey": "wxmp_mt-weapp",
             "accept-encoding": "gzip, deflate, br",
             "connection": "keep-alive",
-            "token": self.cookie['token']
+            "token": self.cookie['token'],
+            "uuid":self.cookie['uuid']
         }
         if(header):
             headers.update(header)
@@ -62,15 +62,40 @@ class User:
         self.index = index
         self.valid = True
 
-    def userInfo(self):
+    def getLoginedUserInfo(self):
+        url = f"https://i.meituan.com/wrapapi/getLoginedUserInfo?token={self.cookie['token']}"
+        rjson = self.get(url=url,header=None)
+        if(not rjson):
+            self.valid = False
+            return
+        if("error" not in rjson):
+            self.valid = True
+            self.info = rjson
+            print("用户昵称：",rjson['nickName'])
+            print("用户号码：",rjson['mobile'])
+            print("用户ID：",rjson['userId'])
+        else:
+            self.valid = False
+            print("账号失效")
+
+    def wxUserInfo(self):
         url = f"https://web.meituan.com/web/user/points?token={self.cookie['token']}&userId={self.cookie['userId']}"
-        print(url)
         rjson = self.get(url)
-        print(rjson)
+        if(not rjson):
+            return
+        if(rjson['success']):
+            self.info.update(rjson['data'])
+            print("金币余额：",rjson['data']['count'])
+        else:
+            print("获取微信金币信息失败：",rjson['message'])
 
     def run(self):
-        self.userInfo()
-
+        print(f"\n======账号[{self.index}]======")
+        self.getLoginedUserInfo()
+        if(not self.valid):
+            return
+        print("\n>>>>微信金币")
+        self.wxUserInfo()
 
 def initEnv() -> list:
     accountList = []
