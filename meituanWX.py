@@ -117,7 +117,7 @@ class User:
                     print(f"任务[{task['title']}]：已完成")
                 elif(taskRuleVos['status'] == "INIT"):
                     print(f"任务[{task['title']}]：未完成")
-                    if(task['actionType'] == 27):
+                    if(task['actionType'] in [12,27]):
                         taskInfo = {}
                         taskInfo['taskIdKey'] = taskRuleVos['taskIdKey']
                         taskInfo['taskRuleIdKey'] = taskRuleVos['taskRuleIdKey']
