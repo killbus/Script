@@ -1,14 +1,10 @@
 # -*- encoding: utf-8 -*-
 '''
 @项目名称：   ydyp.py
-@项目地址：   
-@创建时间：   2022/06/26 14:31:14
-@创作者  ：   wsfsp4 
-@版本号  ：   
-@功能描述：   
-@特别提醒：   
-@更新时间：   2022/07/09 04:07:41
-@更新内容：   加入邮箱果园任务
+@更新时间：   2022/07/31 10:49:42
+@版本号  ：   1.1
+@环境变量：   
+@更新内容：   
 '''
 import hashlib
 import sys
@@ -20,6 +16,8 @@ import sys
 from time import sleep
 import requests
 
+
+PROJECT_NAME = "ydyp"
 
 class User:
     def __init__(self, account, index=1) -> None:
@@ -825,9 +823,9 @@ def initEnv() -> list:
     accountList = []
     filePath = sys.path[0]
     if(filePath.find("\\") != -1):
-        filePath += "\{0}.json".format("ydyp")
+        filePath += "\{0}.json".format(PROJECT_NAME)
     else:
-        filePath += "/{0}.json".format("ydyp")
+        filePath += "/{0}.json".format(PROJECT_NAME)
     # 读写配置
     if(os.path.isfile(filePath)):
         file = open(filePath, "r", encoding="utf-8")
@@ -837,7 +835,7 @@ def initEnv() -> list:
     else:
         file = open(filePath, "w+", encoding="utf-8")
         newContent = {"accounts": [
-            {"gyCookie": "", "session": "", "remark": ""}]}
+            {"phone": "", "authorization": "", "remark": ""}]}
         file.write(json.dumps(newContent, indent=2))
         file.close()
     return accountList
