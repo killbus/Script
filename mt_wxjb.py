@@ -10,19 +10,31 @@
 import json
 import os
 import sys
-from time import sleep
-
+from time import sleep, time
 import requests
 
 
-PROJECT_NAME = "meituanWX"
+PROJECT_NAME = "mt_wxjb"
 
 
 class User:
     def __init__(self, cookie, index=1) -> None:
-        self.cookie = cookie
         self.index = index
         self.valid = True
+        self.cookie = cookie
+        # wxRiskLevel = {
+        #     "appid": "wxde8ac0a21135c07d",
+        #     "openid": "oJVP50DyvpezrN4uCDyKOzrCFnPo",
+        #     "mchid": f"{int(time())}"}
+        # riskForm = {
+        #     "userid": f"{cookie['userId']}",
+        #     "uuid": cookie['uuid'],
+        #     "ip": "",
+        #     "partner": 0,
+        #     "platform": 13,
+        #     "appletsFingerprint": "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",
+        #     "wxRiskLevel": json.dumps(wxRiskLevel)}
+        # self.cookie['riskForm'] = json.dumps(riskForm)
 
     def get(self, url, header=None):
         headers = {
@@ -117,7 +129,7 @@ class User:
                     print(f"任务[{task['title']}]：已完成")
                 elif(taskRuleVos['status'] == "INIT"):
                     print(f"任务[{task['title']}]：未完成")
-                    if(task['actionType'] in [12,27]):
+                    if(task['actionType'] in [12, 27]):
                         taskInfo = {}
                         taskInfo['taskIdKey'] = taskRuleVos['taskIdKey']
                         taskInfo['taskRuleIdKey'] = taskRuleVos['taskRuleIdKey']
@@ -217,6 +229,7 @@ class User:
                 print("今日已参与抽奖")
             else:
                 print("今日未参与抽奖")
+                self.wxCoinLotteryDraw()
         else:
             print("获取抽奖信息失败：", rjson['msg'])
 
@@ -228,10 +241,12 @@ class User:
             "expoId": "AwQAAABJAgAAAAEAAAAyAAAAPLgC95WH3MyqngAoyM/hf1hEoKrGdo0pJ5DI44e1wGF9AT3PH7Wes03actC2n/GVnwfURonD78PewMUppAAAADiXjA8/qPLUvGejBO05Yidm5pmafLNbeKDMJqd/MHRuscj3PE66t6ZEl8WXnfr0TdHWadlIygE8vw==",
             "cityId": 934,
             "appletsFingerprint": "WX__ver1.2.0_CCCC_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"}
-        rjson = self.post(url=url, body=json.dumps(body))
-        if(not rjson):
-            return
+        header = {
+            "mtgsig": '{"a1":"1.1","a2":1659295379293,"a3":"1v8622uv7zu852vvy69x91u0v7299y2w817448v200y77978y3v0vw35","a4":"f6c7840d74c3cf5a0d84c7f65acfc37450ab71a30a64b2d7","a5":"kAY9EwenOakpTjR4M3KO8XZLM9ygUIydN8QERaQ0rNp8+FNPoUYrvWXJLe3uYZTIpymKenVKKWuYvTpAMdR+3kiUA1zk8n3peQr0CpdEjc7ndl+npm0LbH/NnLSph3OR+MCBd3UDzeotenZaCtzI4Do2xk9fLj6rssQZksW9HlOs7VPpGa6YwIM5W4zGGaOF+VLh3MYfjVScOSeXihJ36ThZq3OFy0ScF8agCmTyV68u","a6":"w1.1ssi/GIBHn4kzTKvcTWYWvB2n2jHBcd9eC6mDneAW9OdpifkaH4UqEYHEyS/orGr6TO2djYsl1xOxoLrWjhrSG28Jgxayp/UQ43qgYw8csY94W1abB1S/Ga3q5SNRbgkjBqak+cm0QTyiD4XfNPDMmChjimkMj0XCK3gUkx6h5HSpbpIvp9FkRO4hZMvMw2Y5S09zh6c3uHmgjm4j/u7mmRC4zbATSeeZ+uBBREHlMb+rIbM+R562EuFcW7hc6QIEEyyl0W23lI8GF3VlLcp16AxeM9ZqekZruqTKwUTI/0NLe9zqxkyhZigykxPHrTvE0oJvmBEEZhHX8IJJi7COdvd0x9niFqGMtJiyv0ok36AEX6dX92pMS1rEWY47u3PCrsgaEkHXzj0OFeiWQ5LF8N7Q7HdGzYLDgAin291S0TNk3EdbGqDPoL1uv+JKW9Ke3uQ89JjRt5S/08kZ4JfUCdoqycGMzsv6eXXEHMfYnHECqmskhCsHuXmpaRynxHvUkzY2tiXn7r0UEor2/X1DmgnjCNUERjjlyfS6YI8tV2hqCQvOMzRtZo1w3sqBNBeh90JhKaaw0rm5Wrxle9w6YW0+N9ItSr6BqMwwSbsBpwTl+lTdRBRev9N1szrO2kupI/AfTp0TP3aW7u7zaLhKxRG3jGWlbmnKsTUEF/nGBevj2wK2ONDITm7byxHoXd1K5oDzYXfm1TfMO+awAjhXFaEfKKI2FTITuNB/Y1waFka5lJBz9lSSMwTdGFzLtgu8Drkb+3lLiE/TZbwotWzQOiegVgIDGruDa+2dMW3TWON6O4JLXAEBIyoEQm0Wi1fkW/CQDSA/ERs4JkJk11DvgQ==","a7":"wxde8ac0a21135c07d","x0":3,"d1":"c2516728eb1f85c4abfdba2648116625"}'}
+        rjson = self.post(url=url, body=json.dumps(body), header=header)
         print(rjson)
+        if(not rjson or 'code' not in rjson):
+            return
         if(rjson['code'] == 0):
             print("抽奖成功：", rjson['data']['prize']['desc'])
         else:
@@ -268,7 +283,7 @@ def initEnv() -> list:
     else:
         file = open(filePath, "w+", encoding="utf-8")
         newContent = {"accounts": [
-            {"token": "", "userId": "", "uuid": "", "riskForm":"","remark": ""}]}
+            {"token": "", "userId": "", "uuid": "", "riskForm": "", "remark": ""}]}
         file.write(json.dumps(newContent, indent=2))
         file.close()
     return accountList
@@ -279,8 +294,12 @@ if __name__ == "__main__":
     users = []
     index = 1
     for cookie in cookies:
-        users.append(User(cookie, index=index))
-        index += 1
+        if(cookie['token'] and cookie['userId']):
+            users.append(User(cookie, index=index))
+            index += 1
 
     for user in users:
-        user.run()
+        try:
+            user.run()
+        except Exception as e:
+            print("运行异常：", str(e))

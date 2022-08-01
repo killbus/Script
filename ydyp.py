@@ -1,14 +1,15 @@
 # -*- encoding: utf-8 -*-
 '''
 @项目名称：   ydyp.py
-@更新时间：   2022/07/31 10:49:42
-@版本号  ：   1.1
+@版本号  ：   1.2
 @环境变量：   
-@更新内容：   
+@更新内容：   更新日任务;云朵作战兑换次数
 '''
+from datetime import datetime
 import hashlib
 import sys
 from time import sleep
+import time
 import xmltodict
 import json
 import os
@@ -18,6 +19,7 @@ import requests
 
 
 PROJECT_NAME = "ydyp"
+
 
 class User:
     def __init__(self, account, index=1) -> None:
@@ -47,14 +49,17 @@ class User:
             print("GET异常：{0}".format(str(e)))
             return None
 
-    def __post__(self, url, body=None, header=None, isXml=False):
+    def __post__(self, url, body=None, header=None, isXml=False,onlyRequest = False):
         try:
             headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; BRQ-AN00 Build/N6F26Q; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/81.0.4044.117 Mobile Safari/537.36 MCloudApp/9.0.1",
                        "Content-Type": "application/json",
-                       "X-Requested-With": "com.chinamobile.mcloud"}
+                       "X-Requested-With": "com.chinamobile.mcloud"
+                       }
             if(header):
                 headers.update(header)
             res = requests.post(url, data=body, headers=headers)
+            if(onlyRequest):
+                return None
             if(isXml):
                 return xmltodict.parse(res.text)
             else:
@@ -366,6 +371,20 @@ class User:
         else:
             print("获取邀请码失败：{0}".format(rjson['msg']))
 
+    # 果园助力入口
+    def invite(users):
+        print("》》》》果园助力")
+        for userA in users:
+            if(not userA.authorizationValid):
+                continue
+            for userB in users:
+                if(not userB.authorizationValid or userA.account['phone'] == userB.account['phone'] or "gyInviteCode" not in userB.account):
+                    continue
+                else:
+                    userA.gyInviteFriend(
+                        userB.account['gyInviteCode'], userB.account['phone'])
+                    sleep(10)
+
     # 果园助力
     def gyInviteFriend(self, inviteCode, invitePhone):
         url = "https://happy.mail.10086.cn/jsp/cn/garden/wx/inviteFriend.do?inviteCode={0}&inviteType=backup&clientName=HCY".format(
@@ -397,15 +416,28 @@ class User:
             history = rjson['result']['history']
             info = rjson['result']['info']
             curr = info['curr']
+            exchange = info['exchange']
             if(self.account['remark']):
                 print("账号备注：{0}".format(self.account['remark']))
             print("账号手机：{0}".format(info['phone']))
-            print("合成次数：{0}".format(info['succ']))
-            print("可用次数：{0}".format(curr))
             if("0" in history):
+                print("合成次数：{0}".format(info['succ']))
                 print("本月排名：{0}".format(history['0']['rank']))
-            elif("-1" in history):
+            if("-1" in history):
                 print("上月排名：{0}".format(history['-1']['rank']))
+            print(f"可用次数：{curr}")
+            print(f"可兑次数：{exchange}")
+            #兑换2-3次 一般160（3+3）左右能进前500名
+            limit = 3
+            if(time.localtime(time.time()).tm_mday%2 == 0):
+                limit = 2
+            print("")
+            if(exchange > limit):
+                flag =  self.__hcExchange__()
+                if(flag):
+                    curr += 1
+            else:
+                print("兑换次数已达设定值，明天再兑换")
             if(curr > 0):
                 print("")
             while(curr > 0):
@@ -415,7 +447,20 @@ class User:
         else:
             print("获取信息失败：{0}".format(rjson['msg']))
 
-    # 云朵作战邀请
+    def __hcExchange__(self):
+        url = "https://caiyun.feixin.10086.cn/market/signin/hecheng1T/exchange?num=1"
+        header = {"jwttoken": self.account['jwttoken']}
+        rjson = self.__get__(url=url,header=header)
+        if(not rjson):
+            return False
+        if(rjson['code'] == 0):
+            print("兑换次数成功：-2云朵")
+            return True
+        else:
+            print(f"兑换次数失败：{rjson['msg']}")
+            return False
+
+    # 云朵作战开始游戏
     def __hcBeinvite__(self):
         url = "https://caiyun.feixin.10086.cn/market/signin/hecheng1T/beinvite"
         header = {"jwttoken": self.account['jwttoken']}
@@ -441,7 +486,7 @@ class User:
         else:
             print("合成失败：{0}".format(rjson['msg']))
 
-    # 云朵作战开始游戏
+    # 云朵作战奖励记录
     def __hcRecord__(self):
         url = "https://caiyun.feixin.10086.cn/market/signin/public/cloudRecord?marketname=hecheng1T&type=1&pageNumber=1&pageSize=1000"
         header = {"jwttoken": self.account['jwttoken']}
@@ -459,6 +504,43 @@ class User:
                         "{0}\t +{1}云朵".format(record['inserttime'], record['num']))
         else:
             print("获取中奖记录失败：{0}".format(rjson['msg']))
+
+    # 云圈子模拟加入
+    def __groupCreate__(self):
+        url = "https://group.yun.139.com/hcy/group/manage/apply/create"
+        body = "Hz93ObJPFgFXIfjdtYViJCTMAaDmDShKtB0u4qZn1NhsOO8xXCrXnaJM9ytBD2mVRFxBqTi0MZEljI/3ZGqSk61FQ6+cyhW4ePyYB4tKHaR3HMIGcoITPsiwjhz232IKNLa7yi0V7RuTV+qtdzOhhw=="
+        header = {
+            "x-DeviceInfo": "1|192.118.1.109|1|9.1.1|HUAWEI|P40|C04D4DA1575D8247A2C070D03E9E2E14|02-00-00-00-00-00|android 7.1.2|720X1184|zh|||",
+            "Authorization": self.account['authorization'],
+            "API-VERSION": "v2",
+            "hcy-cool-flag": "1"
+        }
+        self.__post__(url=url, body=body, header=header,onlyRequest=True)
+        print("已模拟加入圈子")
+
+    # 云圈子模拟点赞
+    def __groupLike__(self):
+        url = "https://group.yun.139.com/hcy/group/dynamic/like/likeOrUnlike"
+        body = "7WuMFIwFUB/3r7QCSiMvLvJGYRPyDv8jJLBXhZDHIiFeLs1METXcWDTPsYemSE1lRaL9J3s4AZdeuEX8I65VJ9jDsZ3AoqLeKKuwGuBpqOKQR5/bQNAHJSnDMZzz1vvN+ItVXIdXtoA4AhB//ZVhng=="
+        header = {
+            "x-DeviceInfo": "1|192.118.1.109|1|9.1.1|HUAWEI|P40|C04D4DA1575D8247A2C070D03E9E2E14|02-00-00-00-00-00|android 7.1.2|720X1184|zh|||",
+            "Authorization": self.account['authorization'],
+            "hcy-cool-flag": "1"
+        }
+        self.__post__(url=url, body=body, header=header,onlyRequest=True)
+        print("已模拟点赞")
+
+    # 云圈子模拟取消点赞
+    def __groupUnlike__(self):
+        url = "https://group.yun.139.com/hcy/group/dynamic/like/likeOrUnlike"
+        body = "ipIcJmBiNO4pLAQfQdA7AuOP2Pa8wjFDqI5J2KTrxNX0mdUgxLQfaYJEinBMsM7BW87ZM8nidEfOqRFffGrReTj9ehrCRN6ss3y0VMbU07HmGbQeKlCKHYGNYHWzLlasJ2GnegqL45Mxh/h4UDqCFw=="
+        header = {
+            "x-DeviceInfo": "1|192.118.1.109|1|9.1.1|HUAWEI|P40|C04D4DA1575D8247A2C070D03E9E2E14|02-00-00-00-00-00|android 7.1.2|720X1184|zh|||",
+            "Authorization": self.account['authorization'],
+            "hcy-cool-flag": "1"
+        }
+        self.__post__(url=url, body=body,header=header,onlyRequest=True)
+        print("已模拟取消点赞")
 
     # 彩云中心信息
     def __cyInfo__(self):
@@ -504,7 +586,7 @@ class User:
         else:
             print("获取任务列表失败：{0}".format(rjson['msg']))
 
-    # 彩云中心任务点击
+    # 彩云中心任务点击(只对部分任务有效)
     def __cyTaskClick__(self, taskId):
         url = "https://caiyun.feixin.10086.cn/market/signin/task/click?key=task&id={0}".format(
             taskId)
@@ -523,51 +605,38 @@ class User:
             print("当前拥有云朵：{0}".format(rjson['result']['total']))
         else:
             print("收取云朵失败：{0}".format(rjson['msg']))
-    
-    def invite(users):
-        print("》》》》果园助力")
-        for userA in users:
-            if(not userA.authorizationValid):
-                continue
-            for userB in users:
-                if(not userB.authorizationValid or  userA.account['phone'] == userB.account['phone'] or "gyInviteCode" not in userB.account):
-                    continue
-                else:
-                    userA.gyInviteFriend(
-                        userB.account['gyInviteCode'], userB.account['phone'])
-                    sleep(10)
 
     def run(self):
         print("{0}账号[{1}]{0}".format(10*"=", self.index))
-        print("》》》》云盘")
-        sdk = SDK(self.account)
-        sdk.run()
-        print("")
-        self.__querSpecToken__()
-        if(not self.authorizationValid):
-            return
-        self.__getGyCookie__()
-        if(self.gyValid):
-            print("》》》》云果园")
-            self.__gyGetTreeInfo__()
-            sleep(3)
-            print("")
-            self.__gyCheckInfo__()
-            sleep(3)
-            print("")
-            self.__gyTaskEnter__()
-            print("")
-            self.__gyClickCartoon__()
-            sleep(3)
-            print("")
-            self.__gyWatering__()
-            sleep(3)
-            print("")
-            self.__gyOpenBox__()
-            sleep(3)
-            print("")
-            self.__gyInviteInfo__()
-            print("")
+        # print("》》》》云盘")
+        # sdk = SDK(self.account)
+        # sdk.run()
+        # print("")
+        # self.__querSpecToken__()
+        # if(not self.authorizationValid):
+        #     return
+        # self.__getGyCookie__()
+        # if(self.gyValid):
+        #     print("》》》》云果园")
+        #     self.__gyGetTreeInfo__()
+        #     sleep(3)
+        #     print("")
+        #     self.__gyCheckInfo__()
+        #     sleep(3)
+        #     print("")
+        #     self.__gyTaskEnter__()
+        #     print("")
+        #     self.__gyClickCartoon__()
+        #     sleep(3)
+        #     print("")
+        #     self.__gyWatering__()
+        #     sleep(3)
+        #     print("")
+        #     self.__gyOpenBox__()
+        #     sleep(3)
+        #     print("")
+        #     self.__gyInviteInfo__()
+        #     print("")
         self.__getJwtToken__()
         if(self.cyValid):
             print("》》》》云朵大作战")
@@ -575,6 +644,12 @@ class User:
             print("")
             sleep(3)
             self.__hcRecord__()
+            print("")
+            print("》》》》云圈子")
+            self.__groupCreate__()
+            self.__groupLike__()
+            sleep(2)
+            self.__groupUnlike__()
             print("")
             print("》》》》云朵中心")
             self.__cyInfo__()
@@ -725,9 +800,9 @@ class SDK:
         catalogID = "00019700101000000001"
         body = self.buildUpInfoBody(fName, fSize, catalogID)
         headers = {
-            "x-huawei-channelSrc":"10000023",
+            "x-huawei-channelSrc": "10000023",
         }
-        rjson = self.__post__(url, data=body,header=headers)
+        rjson = self.__post__(url, data=body, header=headers)
         if(not rjson):
             return None
         if(rjson['result']['@resultCode'] == "0"):
@@ -852,5 +927,5 @@ if __name__ == "__main__":
     for user in users:
         user.run()
         print("\n")
-    User.invite(users)
-
+    if(len(users)):
+        User.invite(users)
