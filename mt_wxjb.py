@@ -22,19 +22,6 @@ class User:
         self.index = index
         self.valid = True
         self.cookie = cookie
-        # wxRiskLevel = {
-        #     "appid": "wxde8ac0a21135c07d",
-        #     "openid": "oJVP50DyvpezrN4uCDyKOzrCFnPo",
-        #     "mchid": f"{int(time())}"}
-        # riskForm = {
-        #     "userid": f"{cookie['userId']}",
-        #     "uuid": cookie['uuid'],
-        #     "ip": "",
-        #     "partner": 0,
-        #     "platform": 13,
-        #     "appletsFingerprint": "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",
-        #     "wxRiskLevel": json.dumps(wxRiskLevel)}
-        # self.cookie['riskForm'] = json.dumps(riskForm)
 
     def get(self, url, header=None):
         headers = {
@@ -108,7 +95,8 @@ class User:
             "userId": self.cookie['userId'],
             "userType": "MEI_TUAN",
             "uuid": self.cookie['uuid'],
-            "cityId": 934, "taskIdKeys": ["176f400a8f", "67bd2e0988", "672129ff6d", "1c8df37ffe", "e36bae3f8f", "6696ff7825", "89515f0102", "c6026478e4", "7ceb1c14a7", "b7719de06c", "075eb403be", "cdb75f714d", "6f70050a62", "0b9befabe1", "2ab24bbc57", "2d98ddf8ac"],
+            "cityId": 934,
+            "taskIdKeys": ["176f400a8f", "67bd2e0988", "672129ff6d", "6696ff7825", "7ceb1c14a7", "46ebba5312", "f5e2218b18", "c6026478e4", "7ceb1c14a7", "075eb403be", "cdb75f714d", "6f70050a62", "b6bfd8c1bc"],
             "sourceType": "MEI_TUAN",
             "mini_program_token": self.cookie['token'],
             "inviter": "",
@@ -210,7 +198,10 @@ class User:
                     for taskRule in taskRuleVos:
                         if(taskRule['status'] == "INIT"):
                             task = {
-                                "taskIdKey": taskRule['taskIdKey'], "taskRuleIdKey": taskRule['taskRuleIdKey']}
+                                "taskIdKey": taskRule['taskIdKey'],
+                                "taskRuleIdKey": taskRule['taskRuleIdKey'],
+                                "cubePageId": 0
+                            }
                             self.wxCoinTaskStart(task)
                             break
             else:
