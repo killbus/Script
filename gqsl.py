@@ -97,7 +97,7 @@ class User:
                             self.addDynamics()
                         elif(task['taskId'] == 8):
                             self.dynamicComment()
-                        elif(task['taskID'] in [4, 5]):
+                        elif(task['taskId'] in [4, 5]):
                             self.shareDynamics()
                         sleep(2)
                 elif(banner['type'] == -2):
