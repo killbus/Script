@@ -203,6 +203,7 @@ class User:
             print(f"动态[{dynamicId}]:点赞失败，{rjson['msg']}")
 
     def run(self):
+        print(f"\n=====账号[{self.index}]")
         self.login()
         if(not self.valid):
             return
