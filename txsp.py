@@ -161,7 +161,6 @@ class User:
         else:
             print("签到失败：",rjson['err_msg'])
 
-
     def shareHelp(self, users):
         if(not self.valid):
             return
