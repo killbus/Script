@@ -651,7 +651,7 @@ class User:
             if(self.account['groupLike']):
                 self.__groupLike__()
             sleep(2)
-            if(self.account['groupUnLike']):
+            if(self.account['groupUnlike']):
                 self.__groupUnlike__()
             print("")
             print("》》》》云朵中心")
