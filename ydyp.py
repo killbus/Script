@@ -508,7 +508,7 @@ class User:
     # 云圈子模拟加入
     def __groupCreate__(self):
         url = "https://group.yun.139.com/hcy/group/manage/apply/create"
-        body = self.account['groundCtreate']
+        body = self.account['groupCtreate']
         header = {
             "x-DeviceInfo": "1|192.118.1.109|1|9.1.1|HUAWEI|P40|C04D4DA1575D8247A2C070D03E9E2E14|02-00-00-00-00-00|android 7.1.2|720X1184|zh|||",
             "Authorization": self.account['authorization'],
@@ -521,7 +521,7 @@ class User:
     # 云圈子模拟点赞
     def __groupLike__(self):
         url = "https://group.yun.139.com/hcy/group/dynamic/like/likeOrUnlike"
-        body = self.account['goundLike']
+        body = self.account['groupLike']
         header = {
             "x-DeviceInfo": "1|192.118.1.109|1|9.1.1|HUAWEI|P40|C04D4DA1575D8247A2C070D03E9E2E14|02-00-00-00-00-00|android 7.1.2|720X1184|zh|||",
             "Authorization": self.account['authorization'],
@@ -533,7 +533,7 @@ class User:
     # 云圈子模拟取消点赞
     def __groupUnlike__(self):
         url = "https://group.yun.139.com/hcy/group/dynamic/like/likeOrUnlike"
-        body = self.account['groundUnlike']
+        body = self.account['groupUnlike']
         header = {
             "x-DeviceInfo": "1|192.118.1.109|1|9.1.1|HUAWEI|P40|C04D4DA1575D8247A2C070D03E9E2E14|02-00-00-00-00-00|android 7.1.2|720X1184|zh|||",
             "Authorization": self.account['authorization'],
@@ -646,12 +646,12 @@ class User:
             self.__hcRecord__()
             print("")
             print("》》》》云圈子")
-            if(self.account['groundCreate']):
+            if(self.account['groupCreate']):
                 self.__groupCreate__()
-            if(self.account['groundLike']):
+            if(self.account['groupLike']):
                 self.__groupLike__()
             sleep(2)
-            if(self.account['groundUnLike']):
+            if(self.account['groupUnLike']):
                 self.__groupUnlike__()
             print("")
             print("》》》》云朵中心")

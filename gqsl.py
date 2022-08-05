@@ -77,7 +77,7 @@ class User:
         if(rjson['code'] == "0000"):
             data = rjson['data']
             print(f"现有积分：{data['totalIntegral']}")
-            print(f"签到天数：{data['signInDays']}")
+            print(f"签到天数：{data['signInDays']}\n")
             banners = data['pageInfo']['banners']
             for banner in banners:
                 if(banner['type'] == -3):
@@ -249,7 +249,6 @@ class User:
         self.login()
         if(not self.valid):
             return
-        print("")
         self.getTasks()
         print("")
         self.signInfo()
