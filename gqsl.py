@@ -108,6 +108,7 @@ class User:
         else:
             print(f"获取任务列表失败：{rjson['msg']}")
 
+    # 获取随机名言
     def getRandomWord(self):
         url = "https://v1.hitokoto.cn/"
         rjson = self.get(url)
@@ -144,7 +145,11 @@ class User:
     # 发布动态
     def addDynamics(self):
         url = "https://mspace.gmmc.com.cn/social-cms-app/frontend/dynamic/add"
-        content = self.getRandomWord()
+        content = ""
+        for i in range(10):
+            content = self.getRandomWord()
+            if(content.__len__ >= 10):
+                break
         body = {"activityId": 0, "backgroundContent": content,
                 "btype": 0, "content": content, "lat": 0.0, "lng": 0.0}
         rjson = self.post(url, body=json.dumps(body))
@@ -162,8 +167,13 @@ class User:
             return
         dynamiic = dynamiics[randint(0, len(dynamiics))]
         url = "https://mspace.gmmc.com.cn/social-cms-app/frontend/comment/add"
+        content = ""
+        for i in range(10):
+            content = self.getRandomWord()
+            if(content.__len__ >= 10):
+                break
         body = {
-            "commentContent": self.getRandomWord(),
+            "commentContent": content,
             "commentType": 2,
             "commentTypeBusinessId": f"{dynamiic['dynamicId']}"
         }
@@ -202,13 +212,48 @@ class User:
         else:
             print(f"动态[{dynamicId}]:点赞失败，{rjson['msg']}")
 
+    # 签到信息
+    def signInfo(self):
+        url = "https://mspace.gmmc.com.cn/customer-app/task-mapi/sign-count?noLoad=true"
+        body = {"taskTypeCode": "TASK-INTEGRAL-SIGN-IN"}
+        rjson = self.post(url, json.dumps(body))
+        if(not rjson):
+            return
+        if(rjson['code'] == "0000"):
+            if(rjson['data']['isSignIn']):
+                print("今日已签到")
+            else:
+                print("今日未签到")
+                self.signIn()
+        else:
+            print(f"获取签到信息失败：{rjson['msg']}")
+
+    # 签到
+    def signIn(self):
+        url = "https://mspace.gmmc.com.cn/customer-app/task-mapi/sign-in?noLoad=true"
+        body = {
+            "taskTypeCode": "TASK-INTEGRAL-SIGN-IN",
+            "appversion": "2.3.0",
+            "operatesystem": "android",
+            "step": 1}
+        rjson = self.post(url, json.dumps(body))
+        if(not rjson):
+            return
+        if(rjson['code'] == "0000"):
+            print("签到成功")
+        else:
+            print(f"签到失败：{rjson['msg']}")
+
     def run(self):
-        print(f"\n=====账号[{self.index}]")
+        print(f"======账号[{self.index}]======")
         self.login()
         if(not self.valid):
             return
         print("")
         self.getTasks()
+        print("")
+        self.signInfo()
+        print("\n")
 
 
 def initEnv():
@@ -226,7 +271,7 @@ if __name__ == "__main__":
     index = 1
     for account in accounts:
         users.append(User(account, index))
-
+        index += 1
     for user in users:
         try:
             user.run()
