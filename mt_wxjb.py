@@ -62,6 +62,21 @@ class User:
             print("POST异常：{0}".format(str(e)))
             return None
 
+    def getTaskKeys(self):
+        url = "https://portal-portm.meituan.com/lancer/mt/cache-proxy"
+        body = {
+        "pageId":"134",
+        "dynamicCacheMap":{"index|lancer-component-background__1.0.1__production|production":["1.0.1"],"index|lancer-component-consume-coin-lottery__0.0.1__production|production":["0.0.1"],"index|lancer-component-nine-box-lottery__1.0.3__production|production":["1.0.3"],"index|lancer-component-point-center-exchange-area__1.0.17__production|production":["1.0.17"],"index|lancer-component-point-center-navigate-bar__1.0.3__production|production":["1.0.3"],"index|lancer-component-point-center-sign-area__1.0.26__production|production":["1.0.26"],"index|lancer-component-point-center-task-list__1.0.41__production|production":["1.0.41"],"index|lancer-component-root__1.0.7__production|production":["1.0.7"]}}
+        rjson = self.post(url,body=json.dumps(body))
+        try:
+            taskIdKeysList = rjson['tree'][0]['slots'][0]['children'][2]['slots'][0]['children'][0]['props']['taskIdKeysList']
+            taskIdKeys = []
+            for taskId in taskIdKeysList:
+                taskIdKeys.append(taskId['taskIdKey'])
+            return taskIdKeys
+        except Exception as e:
+            return ["176f400a8f", "67bd2e0988", "672129ff6d", "6696ff7825", "7ceb1c14a7", "46ebba5312", "f5e2218b18", "c6026478e4", "7ceb1c14a7", "075eb403be", "cdb75f714d", "6f70050a62", "b6bfd8c1bc"]
+
     def getLoginedUserInfo(self):
         url = f"https://i.meituan.com/wrapapi/getLoginedUserInfo?token={self.cookie['token']}"
         rjson = self.get(url=url, header=None)
@@ -96,7 +111,7 @@ class User:
             "userType": "MEI_TUAN",
             "uuid": self.cookie['uuid'],
             "cityId": 934,
-            "taskIdKeys": ["176f400a8f", "67bd2e0988", "672129ff6d", "6696ff7825", "7ceb1c14a7", "46ebba5312", "f5e2218b18", "c6026478e4", "7ceb1c14a7", "075eb403be", "cdb75f714d", "6f70050a62", "b6bfd8c1bc"],
+            "taskIdKeys": self.getTaskKeys(),
             "sourceType": "MEI_TUAN",
             "mini_program_token": self.cookie['token'],
             "inviter": "",
