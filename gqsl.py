@@ -148,7 +148,7 @@ class User:
         content = ""
         for i in range(10):
             content = self.getRandomWord()
-            if(content.__len__ >= 10):
+            if(len(content) >= 10):
                 break
         body = {"activityId": 0, "backgroundContent": content,
                 "btype": 0, "content": content, "lat": 0.0, "lng": 0.0}
@@ -170,7 +170,7 @@ class User:
         content = ""
         for i in range(10):
             content = self.getRandomWord()
-            if(content.__len__ >= 10):
+            if(len(content) >= 10):
                 break
         body = {
             "commentContent": content,
