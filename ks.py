@@ -31,7 +31,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers, verify=False,timeout=5)
+            res = requests.get(url, headers=headers, verify=False)
             if(isText):
                 return res.text
             else:
@@ -51,7 +51,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers, verify=False,timeout=5)
+            res = requests.post(url, data=body, headers=headers, verify=False)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
@@ -177,10 +177,10 @@ class User:
             for task in taskList:
                 if(task['taskId'] == 100):
                     print(task['subTitle'])
-                    ##self.ggTask()
+                    self.ggTask()
                 elif(task['taskId'] == 203):
                     print(task['subTitle'])
-                    ##self.gjTask()
+                    self.gjTask()
         else:
             print("获取任务列表失败："+rjson['error_msg'])
 
