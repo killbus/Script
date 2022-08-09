@@ -1,8 +1,9 @@
+import hashlib
 import json
 from operator import index
 import os
 from random import randint
-from time import sleep
+from time import sleep, time
 import requests
 
 
@@ -17,7 +18,6 @@ class User:
 
     def get(self, url, header=None):
         headers = {
-            "Content-Type": "application/json",
             "appversion": "2.3.0",
             "operatesystem": "android",
             "dataencrypt": "false",
@@ -34,7 +34,7 @@ class User:
 
     def post(self, url, body='', header=None):
         headers = {
-            "Content-Type": "application/json",
+            "content-type": "application/json",
             "appversion": "2.3.0",
             "operatesystem": "android",
             "dataencrypt": "false",
@@ -231,12 +231,16 @@ class User:
     # 签到
     def signIn(self):
         url = "https://mspace.gmmc.com.cn/customer-app/task-mapi/sign-in?noLoad=true"
-        body = {
-            "taskTypeCode": "TASK-INTEGRAL-SIGN-IN",
-            "appversion": "2.3.0",
-            "operatesystem": "android",
-            "step": 1}
-        rjson = self.post(url, json.dumps(body))
+        timestamp = int(time()*1000)
+        signBody = f"6b34c3a7b1c3f63c088defb563835aa1android2.3.0{timestamp}{self.authorization}"
+        md5 = hashlib.md5()
+        md5.update(signBody.encode("utf-8"))
+        sign = md5.hexdigest()
+        body = {"taskTypeCode": "TASK-INTEGRAL-SIGN-IN", "step": 1, "sign": sign,
+                "timestamp": f"{timestamp}", "appVersion": "2.3.0", "operateSystem": "android"}
+        header = {
+            "referer": "https://mspace.gmmc.com.cn/points/points-task?goindex=1"}
+        rjson = self.post(url, body=json.dumps(body), header=header)
         if(not rjson):
             return
         if(rjson['code'] == "0000"):
@@ -257,6 +261,7 @@ class User:
 
 def initEnv():
     env = os.environ
+    env[COOKIE_NAME] = '{"timestamp":"1659548947820","appId":"user-soa-service","sig":"7cfb72ebb6f863c757fe876fdc7c8222","data":"Dlm0RcVcyUU7d6le1OBdmKcL4GXM16ZZanMW_z75QVbvgOxX3gMhLyzzZgRC4YT9gY97Tx0719GpfZZG8rMsIScTBiqvfvE7xV-zYyJPzZnn1A7U2BCE1xXJ9KK0uK_8VV4JWpeAisSckV7rfVkmDIugNFVMvSX0herdjERFXVVLEgqtgpgMWuCbSf52rfANsAjzJ21pRi8BSojuZmmM8eaY6rCd50gTxfJLP9PoOWeD8S-QmVHNAQ17E_QzbZBx-kItw2YpsK9UDqXrvX9FvwhPl0nELJQN_xOXw1SipbJvQQIwEyAvY3X1r_MAhS7ohqdz0jIcMCYW1raGO0l3Wg==","operatorId":"deviceId"}'
     if(COOKIE_NAME in env):
         cookies = env[COOKIE_NAME]
         if(cookies.find("&")):
