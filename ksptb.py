@@ -7,6 +7,7 @@ from time import sleep
 
 COOKIE_NAME = "ksptbCookie"
 
+requests.packages.urllib3.disable_warnings()
 
 class User:
 
@@ -26,7 +27,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers)
+            res = requests.get(url, headers=headers,verify=False)
             return res.json()
         except Exception as e:
             print("GET异常：{0}".format(str(e)))
@@ -43,7 +44,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers)
+            res = requests.post(url, data=body, headers=headers,verify=False)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
@@ -58,11 +59,11 @@ class User:
             return
         self.basicInfo = {}
         if(rjson['result'] == 1):
+            self.valid = True
             self.basicInfo['cash'] = rjson['data']['cash']
             self.basicInfo['coin'] = rjson['data']['coin']
-            self.valid = True
-            print("登录成功：{0}金币\t{1}现金".format(
-                rjson['data']['coin'], rjson['data']['cash']))
+            print(f"金币余额：{rjson['data']['coin']}")
+            print(f"现金余额：{rjson['data']['cash']}¥")
         else:
             self.valid = False
             print("登录失败：{0}".format(rjson['error_msg']))
@@ -76,10 +77,10 @@ class User:
         if(rjson['result'] == 1):
             # 普通金币签到
             if("tasks" in rjson['data'] and not rjson['data']['todaySignInCompleted']):
-                print("今日金币未签到")
+                print("金币签到：未签到")
                 self.sign(0)
             else:
-                print("今日金币已签到")
+                print("金币签到：已签到")
         else:
             print("获取签到信息失败：{0}".format(rjson['error_msg']))
 
@@ -103,6 +104,7 @@ class User:
         if(not rjson or not rjson['data']):
             return
         if(rjson['result'] == 1):
+            print(f"宝箱总额：{rjson['data']['treasureRewardAmountEveryDay']}")
             status = rjson['data']['status']
             # status 2领取中 3冷却完成 4次数已完
             if(status == 4):
@@ -114,8 +116,7 @@ class User:
                 # 激活宝箱
                 self.getBoxInfo()
             elif(status == 2):
-                print("宝箱冷却时间：{0}s".format(
-                    rjson['data']['treasureCurrentTaskRemainSeconds']))
+                print(f"宝箱冷却时间：{rjson['data']['treasureCurrentTaskRemainSeconds']}s")
         else:
             print("获取宝箱信息失败：{0}".format(rjson['error_msg']))
 
@@ -126,7 +127,6 @@ class User:
         rjson = self.post(url, body=json.dumps(body))
         if(not rjson):
             return
-
         if(rjson['result'] == 1):
             print("开启宝箱成功：获得{0}金币".format(rjson['data']['rewardCount']))
         else:
@@ -142,7 +142,7 @@ class User:
 
 def initEnv():
     env = os.environ
-    #env[COOKIE_NAME] = "kpn=KUAISHOU; kpf=ANDROID_PHONE; c=HUAWEI; ver=10.4; appver=10.4.41.25925; language=zh-cn; countryCode=CN; sys=ANDROID_7.1.2; mod=HUAWEI%28BRQ-AN00%29; net=WIFI; deviceName=HUAWEI%28BRQ-AN00%29; is_background=0; deviceBit=0; oc=HUAWEI; sbh=48; hotfix_ver=; grant_browse_type=AUTHORIZED; userRecoBit=0; socName=HiSilicon+Kirin+820; newOc=HUAWEI; max_memory=256; isp=; kcv=1474; boardPlatform=kirin820; did_tag=3; sw=720; slh=0; rdid=ANDROID_4a4c88b01945cd43; oDid=TEST_ANDROID_FBC46ED4918CA258; country_code=CN; abi=arm64; sh=1280; nbh=96; androidApiLevel=25; browseType=4; ddpi=320; android_os=0; app=0; is_app_prelaunching=1; device_abi=; cl=0; bottom_navigation=false; keyconfig_state=2; ftt=; is_app_prelaunch=0; darkMode=false; totalMemory=7567; iuid=; did_gt=1657440449407; client_key=3c2cd3f3; userId=2920371133; ud=2920371133; kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAHQumDrQXLHX7PXVUimDJwMIyRl9iSJVrH60uHP2EbVIw26gM29cU1jtVF28xrna9Cx0Sb7z4GWe4vxt3GIKzabSX34uPdOJKMtjsx-K2kRsmabzsQ0AT7Affuv2BMm1vCp_5MMREwW8nDWd1jkaknbIvB9qULt_5l0jiAODbyMvirEaZc71ga93ItkwQJV2ZiKikIPcQQ9nR0jJBBAvaDHGhJmtLHvm4BGCob9TuUwQR1Z_BoiIERMj__ln_VMNI-dJvNQssAl5nNNpgNr_tTB4Lj0QtBhKAUwAQ; token=07d3e257d7b543a19ace423e63941783-2920371133; kuaishou.h5_st=Cg5rdWFpc2hvdS5oNS5zdBKgAQirP3FrxkT-LLW0mz7eQ28hwyoYDT9PsqId7F2UaAx1xq6gOzXK2A_SZ1m7H3SHHT7uJhgGch8dNR1LBT6ExTXEloAa8qXkkpdFQXkAvd0_MtU02nm5QXBnV8JbI_kj2inQn2Rp4I1JQy3BtvW5EpYUUw_6zYy7tFqxV9nbS5uP6PqdRuGl70lQW9wWPMm642cR-mQdVRb53RuPoTVKT3IaEgduzxS3De8OcL6wm9oIlLYepiIgS1FNgQjNOrfrC48QcXmGAKe31YfVHItKqmnLUeQcKS4oBTAB; didv=1658157873000; did=ANDROID_45890FE4706E577D; egid=DFP099D72C55E19059991AAF33223EAA8CC26FB74B9715E2BAA1D04A1F5DF5F8; sid=93b746ac-0fa3-4767-b8d7-8d121d19a26c; cold_launch_time_ms=1658410031362; __NSWJ=qWu%2BgoB8K0SjrW80A5lv%2BKGFACulLZBMc5%2BF61EUll3864xJ9prSFeM2Iwury71PAAAAAQ%3D%3D"
+    env[COOKIE_NAME] = "kpn=KUAISHOU; kpf=ANDROID_PHONE; userId=2572784925; did=ANDROID_066bc9bcc33c8a9d; c=HUAWEI_KWAI; ver=10.3; appver=10.3.40.25268; language=zh-cn; countryCode=CN; sys=ANDROID_10; mod=HUAWEI%28CDY-AN00%29; net=WIFI; deviceName=HUAWEI%28CDY-AN00%29; isp=CMCC; ud=2572784925; did_tag=4; egid=DFPC45267EA7DC6FF2C949E5C0ABE88B20B9BE2CDC4039B568FD9A6A3D03E3FD; thermal=10000; kcv=1458; app=0; bottom_navigation=false; oDid=TEST_ANDROID_066ae88cc33c8a9d; android_os=1; boardPlatform=kirin820; androidApiLevel=29; newOc=HUAWEI; slh=0; country_code=cn; nbh=80; hotfix_ver=; did_gt=1651414698121; keyconfig_state=2; max_memory=384; sid=f552c23c-7690-4088-8914-7fb0c970347d; cold_launch_time_ms=1652015341184; oc=HUAWEI_KWAI; sh=1600; ddpi=320; deviceBit=0; browseType=4; power_mode=0; socName=HiSilicon+Kirin+820; is_background=0; sw=720; ftt=; is_app_prelaunch=0; abi=arm64; userRecoBit=0; device_abi=arm64; totalMemory=7567; grant_browse_type=AUTHORIZED; is_app_prelaunching=1; iuid=; rdid=ANDROID_4c59d1a1745f2975; sbh=72; darkMode=false; kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSsAEOysMrTlHLm114NIK8xykeHiZ3KXyhtYFM83LxlG4zb7l3xstfVLojZncT6ijdoX8p4ZDhEy6idH_FTmNXOLLerXdZMTViB_GZ-JpHqRs4bjjbkwxOX1ZQB6OOAdYjG_i5o4ntYs0s6zPMVNCPhOf54BuMcKfOHtloSxtjBlnffPzg5EVV4fP3Yw6xqJIkNfR3_slVph3dXZr2TYt3mIL04NmJPYP00pp_0qRro3YyMRoSO10xFXRwSIqcekHg3JqdJpRXIiBRNL-ZqV8Wdkx17AX9vT3QxT53RRJMIma5d-lqA70A1igFMAE; token=e38d110a460e42f190c1fd6e2f335a77-2572784925; client_key=3c2cd3f3; kuaishou.h5_st=Cg5rdWFpc2hvdS5oNS5zdBKgAdzBnN6yBX8ddVOKF437AOWARUGQ23kEjiwqK6ksFhKYBpt87M4pAO9YrwtTvjy2s6uL428rNrwiU5Q5QDbtBozKVmlksgEazLSlIcZu83I9JOvmKhRsUwlLvOkE5wRkUbBcOHRloLwqGcviqHSQE-pB0jxmPPK4lf31oFZ0lc_DBVvSLGTVlX87-MdvsCyQ_Kl8CbgpISmvm9B3CqaMwd8aEi0FTenUzzyakcPnzsVR98aTkSIgpYe9r5FrLlUDsO-_SLmAmoNns_GnT_f_uPhpKQJHLXooBTAB; cl=0; __NSWJ=CIN10AgGSrueIs0V7jySHXv8Km5OHLiqiMChVG8Vo%2Fltw8QohWals22JNWfpM6NgAAAABA%3D%3D"
     if(COOKIE_NAME in env):
         cookies = env[COOKIE_NAME]
         if(cookies.find("&")):

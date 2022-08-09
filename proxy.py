@@ -38,12 +38,11 @@ class AESCipher:
         decrypted_text = cipher.decrypt(encrypted_text)
         return self.un_pad(decrypted_text).decode('utf-8')
 
-socks.set_default_proxy(socks.SOCKS5,"38.143.66.55", 8091)
-# socket.socket = socks.socksocket
 cliper = AESCipher()
 url = "https://config.v2cross.com/profiles/encryptcfg"
-res = requests.get(url,timeout=3)
+res = requests.get(url,timeout=20)
 data = res.text
 proxies = cliper.decrypt(data).split("\n")
+print("本次更新：",len(proxies))
 for proxy in proxies:
     print(proxy)
