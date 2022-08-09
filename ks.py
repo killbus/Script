@@ -177,7 +177,7 @@ class User:
             for task in taskList:
                 if(task['taskId'] == 100):
                     print(task['subTitle'])
-                    self.ggTask()
+                    ##self.ggTask()
                 elif(task['taskId'] == 203):
                     print(task['subTitle'])
                     ##self.gjTask()
