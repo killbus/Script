@@ -1,1 +1,0 @@
-console.log("\x63\x33\x66\x36\x33")
