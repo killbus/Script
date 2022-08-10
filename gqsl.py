@@ -261,7 +261,6 @@ class User:
 
 def initEnv():
     env = os.environ
-    env[COOKIE_NAME] = '{"timestamp":"1659548947820","appId":"user-soa-service","sig":"7cfb72ebb6f863c757fe876fdc7c8222","data":"Dlm0RcVcyUU7d6le1OBdmKcL4GXM16ZZanMW_z75QVbvgOxX3gMhLyzzZgRC4YT9gY97Tx0719GpfZZG8rMsIScTBiqvfvE7xV-zYyJPzZnn1A7U2BCE1xXJ9KK0uK_8VV4JWpeAisSckV7rfVkmDIugNFVMvSX0herdjERFXVVLEgqtgpgMWuCbSf52rfANsAjzJ21pRi8BSojuZmmM8eaY6rCd50gTxfJLP9PoOWeD8S-QmVHNAQ17E_QzbZBx-kItw2YpsK9UDqXrvX9FvwhPl0nELJQN_xOXw1SipbJvQQIwEyAvY3X1r_MAhS7ohqdz0jIcMCYW1raGO0l3Wg==","operatorId":"deviceId"}'
     if(COOKIE_NAME in env):
         cookies = env[COOKIE_NAME]
         if(cookies.find("&")):
