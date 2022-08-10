@@ -10,8 +10,6 @@ import requests
 
 PROJECT_NAME = "ks"
 API_URL = "http://127.0.0.1:8888/?str="
-requests.packages.urllib3.disable_warnings()
-
 
 class User:
 
@@ -31,7 +29,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers, verify=False)
+            res = requests.get(url, headers=headers)
             if(isText):
                 return res.text
             else:
@@ -51,7 +49,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers, verify=False)
+            res = requests.post(url, data=body, headers=headers)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
