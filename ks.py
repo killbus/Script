@@ -9,7 +9,7 @@ from time import sleep, time
 import requests
 
 PROJECT_NAME = "ks"
-
+API_URL = "http://127.0.0.1:8888/?str="
 requests.packages.urllib3.disable_warnings()
 
 
@@ -79,7 +79,7 @@ class User:
 
     # 获取sig3
     def getSig3(self, str):
-        url = "http://192.168.0.103:8888/?str="+str
+        url = API_URL+str
         return self.get(url, isText=True)
 
     # 主页
