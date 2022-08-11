@@ -9,7 +9,7 @@ from time import sleep, time
 import requests
 
 PROJECT_NAME = "ks"
-API_URL = "http://127.0.0.1:8888/?str="
+API_URL = "http://192.168.0.103:8888/ks?str="
 
 class User:
 
@@ -56,7 +56,7 @@ class User:
             return None
 
     # 更新签名
-    def replaceBody(self, url, body):
+    def replaceSig(self, url, body):
         sig = ""
         kvs = body.split("&")
         for kv in kvs:
@@ -195,9 +195,9 @@ class User:
                 print("未填写广告数据")
                 continue
             url = ad['url']
-            body = self.replaceBody("/rest/r/ad/task/report",ad['body'])
+            body = self.replaceSig("/rest/r/ad/task/report",ad['body'])
             if(not body):
-                return
+                continue
             header = {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
@@ -219,7 +219,7 @@ class User:
             print("未填写逛街数据")
             return
         url = self.account['gjData']['url']
-        body = self.replaceBody("/rest/r/reward/task/getActivityReward", self.account['gjData']['body'])
+        body = self.replaceSig("/rest/r/reward/task/getActivityReward", self.account['gjData']['body'])
         if(not body):
             return
         header = {
@@ -235,7 +235,7 @@ class User:
         else:
             print("逛街失败："+rjson['error_msg'])
 
-    # 游戏抽奖签到
+    # 金币抽奖签到
     def gameSignIn(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/sign-in"
         header = {
@@ -251,7 +251,7 @@ class User:
         else:
             self.gameValid = False
 
-    #游戏抽奖信息
+    #金币抽奖信息
     def gameInfo(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/user/info"
         header = {
@@ -271,7 +271,7 @@ class User:
         else:
             print("获取抽奖信息失败："+rjson['error_msg'])
 
-    #游戏抽奖定时奖励信息
+    #金币抽奖定时奖励信息
     def gameTimerInfo(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/timer-reward/info"
         header = {
@@ -292,7 +292,7 @@ class User:
         else:
             print("获取定时奖励信息失败："+rjson['error_msg'])
 
-    #游戏抽奖定时奖励领取
+    #金币抽奖定时奖励领取
     def gameTimerReqward(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/timer-reward"
         header = {
@@ -307,7 +307,7 @@ class User:
         else:
             print("领取定时奖励失败："+rjson['error_msg'])
 
-    #游戏抽奖
+    #金币抽奖
     def gameLottery(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/lottery?wheelVersion=1"
         header = {
@@ -322,7 +322,35 @@ class User:
         else:
             print("抽奖失败："+rjson['error_msg'])
 
-    #游戏抽奖任务
+    #金币抽奖看视频
+    def gameView(self):
+        adList = self.account['lotteryData']
+        if(len(adList)==0):
+            print("未填写金币抽奖视频数据")
+            return
+        index = 0
+        for ad in adList:
+            index +=1
+            if(not(ad['url'] and ad['body'])):
+                continue
+            params = self.replaceSig("/rest/r/ad/task/report",ad['url'])
+            if(not params):
+                continue
+            url = "https://api.e.kuaishou.com/rest/r/ad/task/report?"+params
+            header = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
+            "User-Agent": "kwai-android aegon/2.12.0",
+            "X-REQUESTID": f"{int(time())*10^8}"}            
+            rjson = self.post(url,ad['body'],header=header)        
+            if(rjson['result'] == 1):
+                print(f"浏览金币抽奖视频[{index}]成功")
+                print("休息5s...")
+                sleep(5)
+            else:
+                print(f"浏览金币抽奖视频[{index}]失败："+rjson['error_msg'])
+    
+    #金币抽奖任务
     def gameTasks(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/tasks"
         header = {
@@ -346,7 +374,7 @@ class User:
         else:
             print("获取任务失败："+rjson['error_msg'])        
 
-    #游戏抽奖领取任务奖励
+    #金币抽奖领取任务奖励
     def gameTasksReward(self,task):
         url = "https://activity.e.kuaishou.com/rest/r/game/task/reward-receive?taskName="+task['taskName']
         header = {
@@ -379,6 +407,7 @@ class User:
                 print("")
                 self.gameInfo()
                 self.gameTimerInfo()
+                self.gameView()
                 self.gameTasks()
             print("")
 
