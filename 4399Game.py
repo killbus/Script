@@ -6,16 +6,16 @@ import requests
 import json
 from urllib import parse
 
-API_URL = "http://192.168.0.103:8888/4399/"
+API_URL = "http://192.168.0.103:8888/4399/sig/?str"
 COOKIE_NAME = "4399Headers"
 
 
 class User:
-    def __init__(self,header,index) -> None:
+    def __init__(self, header, index) -> None:
         self.header = self.parseHeaders(header)
         self.index = index
 
-    def get(self, url, header=None,isText = False):
+    def get(self, url, header=None, isText=False):
         headers = self.header.copy()
         if(header):
             headers.update(header)
@@ -41,18 +41,18 @@ class User:
             return None
 
     # 获取Sign
-    def getSign(self,api,str):
-        url = API_URL+api+"?str="+str
+    def getSign(self, param):
+        url = API_URL+str
         return self.get(url, isText=True)
 
-    def parseHeaders(self,str):
+    def parseHeaders(self, str):
         res = {}
         headers = str.split("\n")
         for hs in headers:
-            hs = hs.split(":",1)
+            hs = hs.split(":", 1)
             if(len(hs) == 2 and hs[1].strip()):
                 res[hs[0]] = hs[1].strip()
-        res.pop("Content-Length","")
+        res.pop("Content-Length", "")
         return res
 
     def centerIndex(self):
@@ -90,10 +90,10 @@ class User:
             self.valid = False
             print("账号异常："+rjson['message'])
 
-    def signIn(self,day):
+    def signIn(self, day):
         url = "https://mapi.yxhapi.com/android/box/v3.0/sign-in.html"
         body = "dateline=1660032892&sign=20dcc3da6ee8bc16e9bac80ff92f3f1b&packages=%5B%22com.smile.gifmaker%22%5D&day=0&deviceId=B0%3A12%3A69%3A69%3A25%3A9E"
-        rjson = self.post(url,body= body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return
         if(rjson['code'] == 100):
@@ -102,7 +102,7 @@ class User:
             print("签到失败："+json.dumps(rjson))
 
     def unlockTask(self):
-        sign = self.getSign("task-unlock",self.header['mdeviceId']+self.usrInfo['pt_uid'])
+        sign = self.getSign(self.header['mdeviceId']+self.usrInfo['pt_uid'])
         if(not sign):
             return
         url = f"https://mapi.yxhapi.com/user/task/box/android/v1.0/daily-unlockList.html?sign={sign}&ptUid={self.usrInfo['pt_uid']}&deviceId={self.header['mdeviceId']}"
@@ -115,22 +115,23 @@ class User:
     def getArticle(self):
         url = "https://mapi.yxhapi.com/forums/box/android/v1.0/home-short.html"
         body = "startKey=&install_game_ids=105423%2C105794%2C105793&action=fresh&deviceName=P40"
-        rjson = self.post(url,body=body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return
         if(rjson['code'] == 100):
             popularList = rjson['result']['popularList']
             popular = popularList[0]
-            article = {}
-            article['id'] = popular['feedId']
-            article['isFollow'] = popular['info']['rec']['is_follow']
+            # 类型A
+            if("feedId" in popular):
+                article = {}
+                article['id'] = popular['feedId']
+                article['isFollow'] = popular['info']['rec']['is_follow']
+                self.readArticle(article)
             ##article['quan_id'] = popular['info']['quan_info']['id']
-            self.readArticle(article)
-            sleep(2)
         else:
             print("获取主页游戏动态失败："+rjson['message'])
-    
-    def readArticle(self,article):
+
+    def readArticle(self, article):
         url = f"https://mapi.yxhapi.com/feed/box/android/v4.2/detail.html?isFollow={article['isFollow']}&startKey=&id={article['id']}&n=20"
         rjson = self.get(url)
         if(not rjson):
@@ -140,17 +141,17 @@ class User:
             self.followArticler(rjson['result']['user']['pt_uid'])
             self.declareArticle(article)
             comments = rjson['result']['comments']['data']
-            if(comments and len(comments)>0):
+            if(comments and len(comments) > 0):
                 sleep(1)
                 article['commentId'] = comments[0]['id']
                 self.declareArticleReply(article)
         else:
             print(f"读取动态[{article['id']}]失败："+rjson['message'])
 
-    def followArticler(self,id):
+    def followArticler(self, id):
         url = "https://mapi.yxhapi.com/user/sns/box/android/v3.0/follow-add.html"
         body = f"startKey=&ids={id}&from=3&n=20"
-        rjson = self.post(url,body=body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return
         if(rjson['code'] == 100):
@@ -158,10 +159,10 @@ class User:
         else:
             print(f"点赞动态动态[{id}]失败："+rjson['message'])
 
-    def declareArticle(self,article):
+    def declareArticle(self, article):
         url = "https://mapi.yxhapi.com/feed/box/android/v1.0/declare.html"
         body = f"feed_id={article['id']}"
-        rjson = self.post(url,body=body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return
         if(rjson['code'] == 100):
@@ -169,16 +170,17 @@ class User:
         else:
             print(f"点赞动态[{article['id']}]失败："+rjson['message'])
 
-    def declareArticleReply(self,article):
+    def declareArticleReply(self, article):
         url = f"https://mapi.yxhapi.com/feed/box/android/v1.0/comment-declare.html"
         body = f"id={article['commentId']}&tid={article['id']}"
-        rjson = self.post(url,body=body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return
         if(rjson['code'] == 100):
             print(f"点赞动态评论[{article['id']}][{article['commentId']}]成功")
         else:
-            print(f"点赞动态评论[{article['id']}][{article['commentId']}]失败："+rjson['message'])
+            print(
+                f"点赞动态评论[{article['id']}][{article['commentId']}]失败："+rjson['message'])
 
     def run(self):
         print(f"======账号[{self.index}]======")
@@ -186,6 +188,7 @@ class User:
         if(self.valid):
             print("\n===>游戏动态")
             self.getArticle()
+
 
 def initEnv():
     env = os.environ
@@ -214,12 +217,13 @@ Accept-Encoding: gzip
             return cookies.split("&")
     return []
 
+
 if __name__ == "__main__":
     accounts = initEnv()
     users = []
     index = 1
     for account in accounts:
-        users.append(User(account,index))
+        users.append(User(account, index))
         index += 1
 
     for user in users:

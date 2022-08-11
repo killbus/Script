@@ -1,15 +1,11 @@
-
-
-from email import header
 import json
-from operator import index, ne
 import os
 import sys
 from time import sleep, time
 import requests
 
 PROJECT_NAME = "ks"
-API_URL = "http://192.168.0.103:8888/ks?str="
+API_URL = "http://192.168.0.103:8888/ks/sig?str="
 
 class User:
 
@@ -76,8 +72,8 @@ class User:
         return None
 
     # 获取sig3
-    def getSig3(self, str):
-        url = API_URL+str
+    def getSig3(self, param):
+        url = API_URL+param
         return self.get(url, isText=True)
 
     # 主页

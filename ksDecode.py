@@ -1,7 +1,7 @@
 
 import hashlib
-from urllib import parse
-
+from urllib import parse, request
+import requests
 
 salt = "55ac69fd171e0ae6ec0c56ffbef1a803"
 urlParams = "mod=HUAWEI%28P40%29&is_background=0&deviceBit=0&oc=JINGMEI_BAIDU_PINZHUAN%2C1&egid=DFP423EA189E48FB35150A91422F3E80E4E6691859B6BC1BBC18727641996F98&sbh=48&hotfix_ver=&appver=10.7.10.26854&grant_browse_type=AUTHORIZED&userRecoBit=0&socName=HiSilicon%20Kirin%20820&newOc=JINGMEI_BAIDU_PINZHUAN%2C1&max_memory=256&isp=&kcv=1474&boardPlatform=kirin820&did_tag=0&sys=ANDROID_7.1.2&sw=720&slh=0&oDid=ANDROID_BE7E829BAFDA06E5&rdid=ANDROID_908d6dab57d9a1cf&language=zh-cn&ver=10.7&country_code=CN&abi=arm32&kpn=KUAISHOU&cdid_tag=0&sh=1280&nbh=96&cold_launch_time_ms=1660172237410&androidApiLevel=25&earphoneMode=1&kpf=ANDROID_PHONE&browseType=4&did=ANDROID_BE7E829BAFDA06E5&ddpi=320&android_os=0&net=WIFI&app=0&is_app_prelaunching=1&device_abi=&ud=2920371133&c=JINGMEI_BAIDU_PINZHUAN%2C1&bottom_navigation=false&keyconfig_state=2&ftt=&is_app_prelaunch=0&darkMode=false&totalMemory=7567&iuid=&did_gt=1660153504577&__NS_sig3=66770724b08b4b57542e2d2c80702d434009c156333f3127&__NStokensig=e7a2228efaec3c5b75e394b8d716509681220fd2ab0a1de0c2ce8583566e088b&sig=29e70e5f79d5739282a6ae15f8f8924e"
@@ -43,8 +43,12 @@ def parseParams(paramsA,paramsB):
         str += f"{k}={parse.unquote(params[k])}"
     return str
 
-p = parseParams(urlParams,bodyParams)+salt
-print(p)
-md5 = hashlib.md5()
-md5.update(p.encode("utf-8"))
-print(md5.hexdigest())
+# p = parseParams(urlParams,bodyParams)+salt
+# print(p)
+# md5 = hashlib.md5()
+# md5.update(p.encode("utf-8"))
+# print(md5.hexdigest())
+
+data = parse.quote("shareToExternalBE7E829BAFDA06E5B0:12:69:69:25:9EB0:12:69:69:25:9E3303007075uremZgjwletAY3+gspgEIg==")
+url = "http://192.168.0.103:8888/4399/sign-in?str="+"16600328920B0%3A12%3A69%3A69%3A25%3A9E%5B%22com.smile.gifmaker%22%5D"
+res = requests.get(url)
