@@ -6,7 +6,7 @@ import requests
 import json
 from urllib import parse
 
-API_URL = "http://192.168.0.103:8888/4399/sig/?str"
+API_URL = "http://192.168.0.103:8888/4399/sig/?str="
 COOKIE_NAME = "4399Headers"
 
 
@@ -40,11 +40,6 @@ class User:
             print("POST异常：{0}".format(str(e)))
             return None
 
-    # 获取Sign
-    def getSign(self, param):
-        url = API_URL+str
-        return self.get(url, isText=True)
-
     def parseHeaders(self, str):
         res = {}
         headers = str.split("\n")
@@ -55,45 +50,86 @@ class User:
         res.pop("Content-Length", "")
         return res
 
+    # 获取Sign
+    def getSign(self, param):
+        url = API_URL+parse.quote(param)
+        return self.get(url, isText=True)
+
+    def buildSignValue(self,values):
+        keys = sorted(values.keys())
+        str = ""
+        for key in keys:
+            if(values[key] != ""):
+                str += f"{values[key]}"
+        return str
+
     def centerIndex(self):
         url = "https://mapi.yxhapi.com/user/task/box/android/v2.1/center-index.html"
         rjson = self.post(url)
         if(not rjson):
             self.valid = False
+            return
         if(rjson['code'] == 100):
             self.valid = True
-            userInfo = rjson['result']['user_info']
-            self.usrInfo = userInfo
-            print(f"用户ID：{userInfo['pt_uid']}")
-            print(f"普通盒币：{userInfo['hebi']} ≈ {userInfo['hebi']/100}元")
-            print(f"超级盒币：{userInfo['super_hebi']}")
-            sign = rjson['result']['sign']
-            print(f"积累签到天数：{sign['total_signed']}")
-            print(f"周期签到天数：{sign['signed_day']}\n")
-            if(sign['today_signed']):
-                print("今日已签到")
-            else:
-                print("今日未签到")
-                self.signIn(sign['signed_day'])
-            daily = rjson['result']['daily']
-            if(daily['unlock'] == 0):
-                print("今日任务未解锁\n")
-                self.unlockTask()
-            else:
-                print("今日任务已解锁\n")
-            for task in daily["data"]:
-                if(task['finish']):
-                    print(f"任务[{task['title']}]已完成")
-                else:
-                    print(f"任务[{task['title']}]未完成")
+            self.centerUserInfo(rjson['result']['user_info'])
+            self.centerSign(rjson['result']['sign'])
+            self.centerTasks(rjson['result']['daily'])
         else:
             self.valid = False
             print("账号异常："+rjson['message'])
 
+    def centerUserInfo(self,userInfo):
+        self.usrInfo = userInfo
+        print(f"用户ID：{userInfo['pt_uid']}")
+        print(f"普通盒币：{userInfo['hebi']} ≈ {userInfo['hebi']/100}元")
+        print(f"超级盒币：{userInfo['super_hebi']}")
+
+    def centerTasks(self,daily):
+        if(daily['unlock'] == 0):
+            print("今日任务未解锁\n")
+            self.unlockTask()
+        else:
+            print("今日任务已解锁\n")
+        print(">>>>>>日常任务")
+        for task in daily["data"]:
+            if(task['finish']):
+                print(f"任务[{task['title']}]已完成")
+            else:
+                print(f"任务[{task['title']}]未完成")
+                taskParams = {}
+                taskParams['ptUid'] = self.usrInfo['pt_uid']
+                taskParams['mac'] = self.header['mdeviceId']
+                taskParams['deviceId'] = self.header['mdeviceId']
+                taskParams['androidId'] = self.header['mdeviceId'].replace(":","A")[0:15]        
+                if(task['title'] != "开启微信提醒"):
+                    taskParams['taskId'] = task['id']
+                    taskParams['action'] = task['action']
+                    self.acceptTask(taskParams)
+                    sleep(3)
+
+    def centerSign(self,sign):
+        print(f"积累签到天数：{sign['total_signed']}")
+        print(f"周期签到天数：{sign['signed_day']}\n")
+        if(sign['today_signed']):
+            print("今日已签到")
+        else:
+            print("今日未签到")
+            self.signIn(sign['signed_day'])
+
+    #签到
     def signIn(self, day):
         url = "https://mapi.yxhapi.com/android/box/v3.0/sign-in.html"
-        body = "dateline=1660032892&sign=20dcc3da6ee8bc16e9bac80ff92f3f1b&packages=%5B%22com.smile.gifmaker%22%5D&day=0&deviceId=B0%3A12%3A69%3A69%3A25%3A9E"
-        rjson = self.post(url, body=body)
+        params = {
+            "dateline":int(time()),
+            "packages":[],
+            "day":day,
+            "deviceId":self.header['mdeviceId']
+        }
+        sign = self.getSign(self.buildSignValue(params))
+        if(not sign):
+            return
+        params['sign'] = sign
+        rjson = self.post(url, body=parse.urlencode(params))
         if(not rjson):
             return
         if(rjson['code'] == 100):
@@ -101,6 +137,7 @@ class User:
         else:
             print("签到失败："+json.dumps(rjson))
 
+    #解锁任务
     def unlockTask(self):
         sign = self.getSign(self.header['mdeviceId']+self.usrInfo['pt_uid'])
         if(not sign):
@@ -112,6 +149,22 @@ class User:
         else:
             print("解锁任务失败："+rjson['message'])
 
+    #完成任务
+    def acceptTask(self,task):
+        sign =  self.getSign(self.buildSignValue(task))
+        if(not sign):
+            return
+        task['sign'] = sign
+        url = "https://mapi.yxhapi.com/user/task/box/android/v1.2/daily-accept.html?"+parse.urlencode(task)
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 100):
+            print(f"完成任务[{rjson['result']['title']}]成功：+{rjson['result']['hebi']}盒币")
+        else:
+            print(f"完成任务失败：{rjson['message']}")
+
+    #动态、资讯获取
     def getArticle(self):
         url = "https://mapi.yxhapi.com/forums/box/android/v1.0/home-short.html"
         body = "startKey=&install_game_ids=105423%2C105794%2C105793&action=fresh&deviceName=P40"
@@ -121,7 +174,7 @@ class User:
         if(rjson['code'] == 100):
             popularList = rjson['result']['popularList']
             popular = popularList[0]
-            # 类型A
+            # 动态类型
             if("feedId" in popular):
                 article = {}
                 article['id'] = popular['feedId']
@@ -131,6 +184,7 @@ class User:
         else:
             print("获取主页游戏动态失败："+rjson['message'])
 
+    #动态详细
     def readArticle(self, article):
         url = f"https://mapi.yxhapi.com/feed/box/android/v4.2/detail.html?isFollow={article['isFollow']}&startKey=&id={article['id']}&n=20"
         rjson = self.get(url)
@@ -148,6 +202,7 @@ class User:
         else:
             print(f"读取动态[{article['id']}]失败："+rjson['message'])
 
+    #动态用户关注
     def followArticler(self, id):
         url = "https://mapi.yxhapi.com/user/sns/box/android/v3.0/follow-add.html"
         body = f"startKey=&ids={id}&from=3&n=20"
@@ -159,6 +214,7 @@ class User:
         else:
             print(f"点赞动态动态[{id}]失败："+rjson['message'])
 
+    #动态点赞
     def declareArticle(self, article):
         url = "https://mapi.yxhapi.com/feed/box/android/v1.0/declare.html"
         body = f"feed_id={article['id']}"
@@ -170,6 +226,7 @@ class User:
         else:
             print(f"点赞动态[{article['id']}]失败："+rjson['message'])
 
+    #动态点赞评论
     def declareArticleReply(self, article):
         url = f"https://mapi.yxhapi.com/feed/box/android/v1.0/comment-declare.html"
         body = f"id={article['commentId']}&tid={article['id']}"
@@ -186,7 +243,7 @@ class User:
         print(f"======账号[{self.index}]======")
         self.centerIndex()
         if(self.valid):
-            print("\n===>游戏动态")
+            print("\n>>>>>游戏动态")
             self.getArticle()
 
 

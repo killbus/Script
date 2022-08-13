@@ -928,7 +928,10 @@ if __name__ == "__main__":
             users.append(User(account, index))
             index += 1
     for user in users:
-        user.run()
+        try:
+            user.run()
+        except Exception as e:
+            print("运行出错："+str(e))
         print("\n")
     if(len(users)):
         User.invite(users)

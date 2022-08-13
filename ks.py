@@ -25,7 +25,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers)
+            res = requests.get(url, headers=headers,timeout=3)
             if(isText):
                 return res.text
             else:
@@ -45,7 +45,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers)
+            res = requests.post(url, data=body, headers=headers,timeout=3)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
@@ -94,18 +94,34 @@ class User:
 
     # 签到信息
     def signInfo(self):
-        url = "https://encourage.kuaishou.com/rest/wd/encourage/signIn/info"
+        url = "https://encourage.kuaishou.com/rest/wd/encourage/signIn/info?sigCatVer=1"
         rjson = self.get(url)
         if(not rjson):
             return
-        if(rjson['result'] == 1):
-            # 普通金币签到
-            if("tasks" in rjson['data'] and not rjson['data']['todaySignInCompleted']):
-                print("金币签到：未签到")
-                self.sign(0)
+        #
+        if(rjson['result'] == 1 and "data" in rjson):
+            if("sevenDaysSignInData" in rjson['data']):
+                sevenDaysSignInData = rjson['data']['sevenDaysSignInData']
+                if(sevenDaysSignInData['todaySigned']):
+                    print("金币签到：已签到")
+                else:
+                    print("金币签到：未签到")
+                    self.sign(sevenDaysSignInData['signInBizId'])
+            elif("cashSignInData" in rjson['data']):
+                cashSignInData = rjson['data']['cashSignInData']
+                currentDay = cashSignInData['currentDay']
+                if(cashSignInData['tasks'][currentDay-1]['status'] !=2):
+                    print("金币签到：未签到")
+                    self.sign(cashSignInData['signInBizId']) 
+                else:
+                    print("金币签到：已签到")
             else:
-                print("金币签到：已签到")
-        else:
+                if(rjson['data']['todaySignInCompleted']):
+                    print("金币签到：已签到")
+                else:
+                    print("金币签到：未签到")
+                    self.sign(0)
+        elif("error_msg" in rjson):
             print("获取签到信息失败：{0}".format(rjson['error_msg']))
 
     # 签到
