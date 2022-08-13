@@ -114,7 +114,7 @@ class User:
             print("今日已签到")
         else:
             print("今日未签到")
-            self.signIn(sign['signed_day'])
+            #self.signIn(sign['signed_day'])
 
     #签到
     def signIn(self, day):

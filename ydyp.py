@@ -551,9 +551,10 @@ class User:
             return
         if(rjson['code'] == 0):
             result = rjson['result']
+            print(json.dumps(result,indent=2))
             print("当前云朵：{0}".format(result['total']))
             print("待收云朵：{0}".format(result['toReceive']))
-            print("签到次数：{0}".format(result['monthDays']))
+            #print("签到次数：{0}".format(result['monthDays']))
             print("")
             if(result['todaySignIn']):
                 print("今日已签到")
