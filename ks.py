@@ -5,7 +5,8 @@ from time import sleep, time
 import requests
 
 PROJECT_NAME = "ks"
-API_URL = "http://192.168.0.103:8888/ks/sig?str="
+API_NAME = "ksApi"
+API_URL = "http://127.0.0.1:8888/ks/sig?str="
 
 class User:
 
@@ -443,6 +444,8 @@ def initEnv() -> list:
             {"remark": "", "cookie": "", "gjData": {"url": "", "body": ""}, "ggData": [{"url": "", "body": ""}]}]}
         file.write(json.dumps(newContent, indent=2))
         file.close()
+    if(API_NAME in os.environ):
+        API_URL = os.environ[API_NAME]
     return accountList
 
 
