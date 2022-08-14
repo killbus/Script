@@ -208,6 +208,7 @@ class User:
             else:
                 print("冒险状态：进行中")
                 print(f"倒计时：{rjson['data']['endTime'] -int(time())}s")
+                print(f"同行人数：{len(rjson['data']['friendVoList'])}")
         else:
             print("获取冒险信息失败："+rjson['message'])
 
@@ -264,7 +265,11 @@ class User:
             return
         params = self.getSign()
         params.update({"plantId": self.plantId})
-        url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/giveSunshine?{urlencode(params)}"
+        url = ""
+        if(self.sunshineNum >600):
+            url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/batchgiveSunshine?{urlencode(params)}"
+        else:
+            url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/giveSunshine?{urlencode(params)}"
         rjson = self.get(url)
         if(not rjson):
             return
