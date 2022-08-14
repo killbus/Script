@@ -240,6 +240,7 @@ class User:
     
     def plantUpgrade(self):
         params = self.getSign()
+        params['plantId'] = self.plantId
         url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/upgrade?{urlencode(params)}"
         rjson = self.get(url)
         if(not rjson):
