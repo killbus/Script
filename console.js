@@ -1,2 +1,0 @@
-str = '\x61\x73\x73\x69\x67' + '\x6e'
-console.log(str)

@@ -10,10 +10,9 @@ from urllib.parse import urlencode
 import warnings
 import requests
 
-
-login = "appId=wx532ecb3bdaaf92f9&md5Secret=111111111112222222233333333333&openId=oBk224qXvXTiaRutzvH8kia5FI2A&wid=10072285262"
-api = "clientKey=IfWu0xwXlWgqkIC7DWn20qpo6a30hXX6&clientSecret=A4rHhUJfMjw2I5CODh5g40Ja1d3Yk1CH&nonce=n7xBzQPKZy5k7EpM&timestamp=1660378205939"
 COOKIE_NAME = "qhdj"
+adventureIds = []
+userIds = []
 warnings.filterwarnings("ignore")
 
 class User:
@@ -130,23 +129,11 @@ class User:
             print(f"游戏次数：{rjson['data']['gaNum']}")
             print(f"阳光数量：{rjson['data']['sunshineNum']}")
             self.sunshineNum = rjson['data']['sunshineNum']
+            self.userId = rjson['data']['id']
+            self.gameNum = rjson['data']['gaNum']
         else:
             print("获取账号信息失败："+rjson['message'])
-        
-    def dailyInfo(self):
-        params = self.getSign()
-        url = f"https://api.xiaoyisz.com/qiehuang/ga/user/daily/info?{urlencode(params)}"
-        rjson = self.get(url)
-        if(not rjson):
-            return
-        if(rjson['code'] == 0):
-            print(f"今日可领阳光：{rjson['data']['yesterdaySunshineNum']}")
-            if(rjson['data']['yesterdaySunshineNum']):
-                self.dailyPickup()
-            print(f"明天可领阳光：{rjson['data']['sunshineNum']}")
-        else:
-            print("获取日常信息失败："+rjson['message'])
-
+    
     def taskList(self):
         params = self.getSign()
         url = f"https://api.xiaoyisz.com/qiehuang/ga/user/task/list?{urlencode(params)}"
@@ -158,8 +145,11 @@ class User:
             for task in tasks:
                 if(task['status'] == 1):
                     print(f"任务[{task['name']}] 未完成")
-                    self.taskReport(task['taskId'],task['taskType'])
-                    sleep(3)
+                    if(task['name'] != "助力任务"):
+                        self.taskReport(task['taskId'],task['taskType'])
+                        sleep(3)
+                    else:
+                        userIds.append(self.userId)
                 elif(task['status'] == 2):
                     print(f"任务[{task['name']}] 待领取奖励")
                     self.taskPrize(task['taskId'])
@@ -169,6 +159,7 @@ class User:
         else:
             print("获取任务列表失败："+rjson['message'])
 
+    #提交任务
     def taskReport(self,taskId,taskType):
         params = self.getSign()
         params['taskId'] = taskId
@@ -183,6 +174,7 @@ class User:
         else:
             print("提交任务失败："+rjson['message'])
 
+    #领取任务奖励
     def taskPrize(self,taskId):
         params = self.getSign()
         params['taskId'] = taskId
@@ -195,16 +187,22 @@ class User:
         else:
             print("领取奖励失败："+rjson['message'])
 
-    def adventureInfo(self):
+    #冒险信息
+    def adventureInfo(self,start = False):
         params = self.getSign()
         url = f"https://api.xiaoyisz.com/qiehuang/ga/user/adventure/info?{urlencode(params)}"
         rjson = self.get(url)
         if(not rjson):
             return
         if(rjson['code'] == 0):
+            self.adventureId = rjson['data']['adventureId']
+            if(start):
+                if(rjson['data']['status'] == 0):
+                    self.adventureStart()
+                return
             if(rjson['data']['status'] == 0):
                 print("冒险状态：空闲中")
-                self.adventureStart()
+                adventureIds.append(self.adventureId)
             else:
                 print("冒险状态：进行中")
                 print(f"倒计时：{rjson['data']['endTime'] -int(time())}s")
@@ -212,6 +210,7 @@ class User:
         else:
             print("获取冒险信息失败："+rjson['message'])
 
+    #开始冒险
     def adventureStart(self):
         params = self.getSign()
         url = f"https://api.xiaoyisz.com/qiehuang/ga/user/adventure/start?{urlencode(params)}"
@@ -219,10 +218,46 @@ class User:
         if(not rjson):
             return
         if(rjson['code'] == 0):
-            print("开始冒险成功")
+            print(f"账号[{self.index}]开始冒险成功")
         else:
-            print("开始冒险失败："+rjson['message'])        
+            print(f"账号[{self.index}]开始冒险失败："+rjson['message'])        
 
+    #冒险参团
+    def adventureHelp(self):
+        for adventureId in adventureIds:
+            if(adventureId == self.adventureId):
+                continue
+            params = self.getSign()
+            params['adventureId'] = adventureId
+            url = f"https://api.xiaoyisz.com/qiehuang/ga/user/adventure/help?{urlencode(params)}"
+            rjson = self.get(url)
+            if(not rjson):
+                continue
+            if(rjson['code'] == 0):
+                print(f"账号[{self.index}]协助冒险[{adventureId}]成功")
+            else:
+                print(f"账号[{self.index}]协助冒险[{adventureId}]失败："+rjson['message'])
+            sleep(2)
+
+    #好友助力
+    def inviteHelp(self):
+        for userId in userIds:
+            if(self.userId == userId):
+                continue
+            params = self.getSign()
+            params['taskType'] = 1
+            params['taskId'] = "1558733726417952768"
+            params['attachId'] = userId
+            url = f"https://api.xiaoyisz.com/qiehuang/ga/user/task/report?{urlencode(params)}"
+            rjson = self.get(url)
+            if(not rjson):
+                continue
+            if(rjson['code'] == 0):
+                print(f"账号[{self.index}]助力[{userId}]成功")
+            else:
+                print(f"账号[{self.index}]助力[{userId}]失败："+rjson['message'])
+
+    #种植信息
     def plantInfo(self):
         params = self.getSign()
         url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/info?{urlencode(params)}"
@@ -238,6 +273,7 @@ class User:
         else:
             print("获取种植信息失败："+rjson['message'])        
     
+    #种植升级
     def plantUpgrade(self):
         params = self.getSign()
         params['plantId'] = self.plantId
@@ -249,7 +285,23 @@ class User:
             print(f"种植进阶成功：{rjson['data']['stage']}")
         else:
             print("种植进阶失败："+rjson['message'])
+    
+    #每日阳光
+    def dailyInfo(self):
+        params = self.getSign()
+        url = f"https://api.xiaoyisz.com/qiehuang/ga/user/daily/info?{urlencode(params)}"
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"今日可领阳光：{rjson['data']['yesterdaySunshineNum']}")
+            if(rjson['data']['yesterdaySunshineNum']):
+                self.dailyPickup()
+            print(f"明天可领阳光：{rjson['data']['sunshineNum']}")
+        else:
+            print("获取日常信息失败："+rjson['message'])
 
+    #每日阳光领取
     def dailyPickup(self):
         params = self.getSign()
         url = f"https://api.xiaoyisz.com/qiehuang/ga/user/daily/pickup?{urlencode(params)}"
@@ -261,6 +313,33 @@ class User:
         else:
             print("领取阳光失败："+rjson['message'])
 
+    #开始挑战
+    def challengeStart(self):
+        params = self.getSign()
+        url = f"https://api.xiaoyisz.com/qiehuang/ga/challenge/start?{urlencode(params)}"
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print("开始游戏成功，等待6s...")
+            sleep(5)
+            self.challengeFinish(rjson['data'])
+        else:
+            print("开始挑战游戏失败："+rjson['message'])
+
+    def challengeFinish(self,battleId):
+        params = self.getSign()
+        body = {"battleId":battleId,"result":1,"costMillisecond":6000}
+        url = f"https://api.xiaoyisz.com/qiehuang/ga/challenge/report?{urlencode(params)}"
+        rjson = self.post(url,body=json.dumps(body))
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"挑战成功：+{rjson['data']['infos'][0]['num']}阳光")
+        else:
+            print("挑战失败："+rjson['message'])
+
+    #施洒阳光
     def giveSunshine(self):
         if(self.sunshineNum < 200):
             return
@@ -293,6 +372,9 @@ class User:
         self.dailyInfo()
         print("")
         self.taskList()
+        if(self.gameNum):
+            print("")
+            self.challengeStart()
         print("")
         self.adventureInfo()
         print("")
@@ -321,3 +403,25 @@ if __name__ == "__main__":
             user.run()
         except Exception as e:
             print("运行出错："+str(e))
+
+    if(len(userIds)):
+        print("\n>>>>好友助力")
+        for user in users:
+            try:
+                user.taskInvite()
+            except Exception as e:
+                print("运行出错："+str(e))
+
+    if(len(adventureIds)):
+        print("\n>>>>冒险探索")
+        for user in users:
+            try:
+                user.adventureHelp()
+            except Exception as e:
+                print("运行出错："+str(e))
+        
+        for user in users:
+            try:
+                user.adventureInfo(True)
+            except Exception as e:
+                print("运行出错："+str(e))
