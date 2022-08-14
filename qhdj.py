@@ -2,6 +2,7 @@ import base64
 import hashlib
 import json
 from math import fabs
+import os
 from random import randint
 from re import T
 from time import sleep, time
@@ -12,9 +13,8 @@ import requests
 
 login = "appId=wx532ecb3bdaaf92f9&md5Secret=111111111112222222233333333333&openId=oBk224qXvXTiaRutzvH8kia5FI2A&wid=10072285262"
 api = "clientKey=IfWu0xwXlWgqkIC7DWn20qpo6a30hXX6&clientSecret=A4rHhUJfMjw2I5CODh5g40Ja1d3Yk1CH&nonce=n7xBzQPKZy5k7EpM&timestamp=1660378205939"
-
+COOKIE_NAME = "qhdj"
 warnings.filterwarnings("ignore")
-
 
 class User:
     def __init__(self, data, index) -> None:
@@ -293,6 +293,23 @@ class User:
         print("")
         self.giveSunshine()
 
+def initEnv():
+    env = os.environ
+    if(COOKIE_NAME in env):
+        cookies = env[COOKIE_NAME]
+        if(cookies.find("&")):
+            return cookies.split("&")
+    return []
 
-data = "eyJ0aGlyZEFwcElkIjoid3g1MzJlY2IzYmRhYWY5MmY5Iiwid2lkIjoxMDA3MjI4NTI2Miwib3BlbklkIjoib0JrMjI0cVh2WFRpYVJ1dHp2SDhraWE1RkkyQSIsImhvbWVTdG9yZUlkIjpudWxsLCJ1dG1fbWVkaXVtIjoiYXBiYW5uZXIiLCJ1dG1fY29udGVudCI6ImFwYmFubmVyIiwidXRtX3NvdXJjZSI6ImhhcHB5bXAiLCJ1dG1fY2FtcGFpZ24iOiJoYXBweWFwIiwiX2NoYW5uZWxfdHJhY2tfa2V5IjoiQTNuZ294djkiLCJ1c2VySW5mbyI6e30sImNoYW5uZWxJbmZvIjp7InV0bV9jYW1wYWlnbiI6ImhhcHB5YXAiLCJ1dG1fc291cmNlIjoiaGFwcHltcCIsInV0bV9tZWRpdW0iOiJhcGJhbm5lciIsInV0bV9jb250ZW50IjoiYXBiYW5uZXIifX0="
-User(data, 1).run()
+if __name__ == "__main__":
+    tokens = initEnv()
+    users = []
+    index = 1
+    for token in tokens:
+        users.append(User(token,index))
+        index +=1
+    for user in users:
+        try:
+            user.run()
+        except Exception as e:
+            print("运行出错："+str(e))
