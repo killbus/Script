@@ -292,6 +292,7 @@ class User:
         self.plantInfo()
         print("")
         self.giveSunshine()
+        print("\n")
 
 def initEnv():
     env = os.environ
