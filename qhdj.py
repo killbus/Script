@@ -229,6 +229,7 @@ class User:
         if(not rjson):
             return
         if(rjson['code'] == 0):
+            self.plantId = rjson['data']['plantId']
             print(f"种植阶段：{rjson['data']['stage']}")
             print(f"阶段进度：{rjson['data']['currentSunshineNum']}/{rjson['data']['needSunshineNum']}")
             if(rjson['data']['currentSunshineNum'] == rjson['data']['needSunshineNum']):
@@ -262,7 +263,7 @@ class User:
         if(self.sunshineNum < 200):
             return
         params = self.getSign()
-        params.update({"plantId": "1558363025227128832"})
+        params.update({"plantId": self.plantId})
         url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/giveSunshine?{urlencode(params)}"
         rjson = self.get(url)
         if(not rjson):
