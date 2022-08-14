@@ -1,12 +1,13 @@
 import os
 from time import sleep, time
+import warnings
 import requests
 import json
 from urllib import parse
 
 API_URL = "http://192.168.3.33:8888/4399/sig/?str="
 COOKIE_NAME = "4399Headers"
-
+warnings.filterwarnings("ignore")
 
 class User:
     def __init__(self, header, index) -> None:
@@ -18,7 +19,7 @@ class User:
         if(header):
             headers.update(header)
         try:
-            res = requests.get(url, headers=headers)
+            res = requests.get(url, headers=headers,verify=False)
             if(isText):
                 return res.text
             return res.json()
@@ -32,7 +33,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers)
+            res = requests.post(url, data=body, headers=headers,verify=False)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
