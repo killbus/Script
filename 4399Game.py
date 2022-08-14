@@ -1,12 +1,10 @@
-
-from math import fabs
 import os
 from time import sleep, time
 import requests
 import json
 from urllib import parse
 
-API_URL = "http://192.168.0.103:8888/4399/sig/?str="
+API_URL = "http://192.168.3.33:8888/4399/sig/?str="
 COOKIE_NAME = "4399Headers"
 
 
