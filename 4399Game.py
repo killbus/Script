@@ -5,8 +5,8 @@ import requests
 import json
 from urllib import parse
 
-API_URL = "http://192.168.3.33:8888/4399/sig/?str="
-COOKIE_NAME = "4399Headers"
+API_URL = "http://127.0.0.1:8888/4399/sig/?str="
+COOKIE_NAME = "gameHeaders"
 warnings.filterwarnings("ignore")
 
 class User:
@@ -244,29 +244,11 @@ class User:
         if(self.valid):
             print("\n>>>>>游戏动态")
             self.getArticle()
+            print("\n")
 
 
 def initEnv():
     env = os.environ
-    env[COOKIE_NAME] = '''mauth: 0b4538bf7a9dc3f083ee0e1575b7e55e
-mareacode: 440100
-zxaid: A01-itPJ%2B%2Bg%2FgN855oceHJm1Odpg%2FYk%2FT6ZS
-mauthcode: 12b8da274|6be278bc780caca6f886c6c34f5ccccb|3303007075
-SM-DEVICEID: 20220809141325e003faf6ef8c79d35d70564e67ae6d74010942b021997e03
-m-id: B0%3A12%3A69%3A69%3A25%3A9E
-a-id: 7A962E41866879B2
-e-id: 
-User-Agent: 4399GameCenter/6.8.0.59(android;P40;7.1.2;720x1184;WIFI;1791.840;baidu)
-mdeviceId: B0:12:69:69:25:9E
-pauth: 3303007075%7C14767929623%7Cc17e20c7129f7c4b162fe4580b546ac5%7C1660032882%7C10001%7Cc942ee14b99db8674b5c3dd9d261ba8d%7C0
-s-id: 
-mudid: 1103gKwPpiHUAcWIdHsXeee3b
-Content-Type: application/x-www-form-urlencoded
-Content-Length: 140
-Host: mapi.yxhapi.com
-Connection: Keep-Alive
-Accept-Encoding: gzip
-'''
     if(COOKIE_NAME in env):
         cookies = env[COOKIE_NAME]
         if(cookies.find("&")):
