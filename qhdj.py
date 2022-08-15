@@ -188,7 +188,7 @@ class User:
             print("领取奖励失败："+rjson['message'])
 
     #冒险信息
-    def adventureInfo(self,start = False):
+    def adventureInfo(self,start = False,onlyId = False):
         params = self.getSign()
         url = f"https://api.xiaoyisz.com/qiehuang/ga/user/adventure/info?{urlencode(params)}"
         rjson = self.get(url)
@@ -196,17 +196,28 @@ class User:
             return
         if(rjson['code'] == 0):
             self.adventureId = rjson['data']['adventureId']
+            #仅获取Id（领取后更新ID）
+            if(onlyId):
+                if(rjson['data']['status'] == 0):
+                    adventureIds.append(self.adventureId)
+                return
+            #开始冒险
             if(start):
                 if(rjson['data']['status'] == 0):
                     self.adventureStart()
                 return
+            #信息展示
             if(rjson['data']['status'] == 0):
-                print("冒险状态：空闲中")
                 adventureIds.append(self.adventureId)
+                print("冒险状态：空闲中")
             else:
-                print("冒险状态：进行中")
-                print(f"倒计时：{rjson['data']['endTime'] -int(time())}s")
-                print(f"同行人数：{len(rjson['data']['friendVoList'])}")
+                if(rjson['data']['endTime'] <= int(time())):
+                    print("冒险状态：待领奖")
+                    self.adventureFinish(rjson['data']['adventureId'])
+                else:
+                    print("冒险状态：进行中")
+                    print(f"倒计时：{rjson['data']['endTime'] -int(time())}s")
+                    print(f"同行人数：{len(rjson['data']['friendVoList'])}")
         else:
             print("获取冒险信息失败："+rjson['message'])
 
@@ -238,6 +249,20 @@ class User:
             else:
                 print(f"账号[{self.index}]协助冒险[{adventureId}]失败："+rjson['message'])
             sleep(2)
+
+    #冒险领奖
+    def adventureFinish(self,adventureId):
+        params = self.getSign()
+        params['adventureId'] = adventureId
+        url = f"https://api.xiaoyisz.com/qiehuang/ga/user/adventure/drawPrize?{urlencode(params)}"
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['code']):
+            print("领取冒险奖励成功")
+        else:
+            print(f"领取冒险奖励失败：{rjson['message']}")
+        self.adventureInfo(onlyId=True)
 
     #好友助力
     def inviteHelp(self):
@@ -408,7 +433,7 @@ if __name__ == "__main__":
         print("\n>>>>好友助力")
         for user in users:
             try:
-                user.taskInvite()
+                user.inviteHelp()
             except Exception as e:
                 print("运行出错："+str(e))
 
