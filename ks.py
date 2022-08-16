@@ -79,7 +79,7 @@ class User:
 
     # 主页
     def home(self):
-        url = "https://encourage.kuaishou.com/rest/wd/encourage/home"
+        url = "https://encourage.kuaishou.com/rest/wd/encourage/account/basicInfo"
         rjson = self.get(url)
         if(not rjson):
             self.valid = False
@@ -87,8 +87,9 @@ class User:
         self.basicInfo = {}
         if(rjson['result'] == 1):
             self.valid = True
-            print(f"金币余额：{rjson['data']['coin']}")
-            print(f"现金余额：{rjson['data']['cash']}¥")
+            print(f"金币余额：{rjson['data']['coinAmount']}")
+            print(f"现金余额：{rjson['data']['cashAmountDisplay']}¥")
+            print(f"积累金额：{rjson['data']['accumulativeAmountDisplay']}¥")
         else:
             self.valid = False
             print("登录失败：{0}".format(rjson['error_msg']))
@@ -99,7 +100,6 @@ class User:
         rjson = self.get(url)
         if(not rjson):
             return
-        #
         if(rjson['result'] == 1 and "data" in rjson):
             if("sevenDaysSignInData" in rjson['data']):
                 sevenDaysSignInData = rjson['data']['sevenDaysSignInData']
@@ -179,19 +179,26 @@ class User:
     def getTasks(self):
         url = "https://encourage.kuaishou.com/rest/wd/encourage/task/list?searchWidgetStatus=false&rankWidgetStatus=false"
         header = {
-            "referer": "https://encourage.kuaishou.com/kwai/task?layoutType=4&source=pendant"}
+            "referer": "https://encourage.kuaishou.com/kwai/task?layoutType=4&source=pendant&hyId=encourage_earning"}
         rjson = self.get(url, header=header)
         if(not rjson):
             return
         if(rjson['result'] == 1):
             taskList = rjson['data']['dailyTasks']['taskList']
             for task in taskList:
+                #广告任务
                 if(task['taskId'] == 100):
                     print(task['subTitle'])
-                    self.ggTask()
+                    if(task['subTitle'].find("10/10") == -1):
+                        self.ggTask()
+                #逛街任务
                 elif(task['taskId'] == 203):
                     print(task['subTitle'])
-                    self.gjTask()
+                    if(task['subTitle'].find("10/10") == -1):
+                        self.gjTask()
+                elif(task['taskId'] == 101):
+                    print("直播任务")
+                    self.zbTask()  
         else:
             print("获取任务列表失败："+rjson['error_msg'])
 
@@ -208,15 +215,20 @@ class User:
             index += 1
             if(not(ad['url'] and ad['body'])):
                 continue
-            body = self.replaceSig("/rest/r/ad/task/report", ad['body'])
-            if(not body):
-                continue
+            #签名在链接里
+            if(ad['url'].find("sig=") > 0):
+                url = ad['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?",2)[1])
+                body = ad['body']
+            #签名在请求体里
+            else:
+                url = ad['url']
+                body = self.replaceSig("/rest/r/ad/task/report", ad['body'])
             header = {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
                 "User-Agent": "kwai-android aegon/2.12.0",
                 "X-REQUESTID": f"{int(time())*10^8}"}
-            rjson = self.post(ad['url'], header=header, body=body)
+            rjson = self.post(url, header=header, body=body)
             if(not rjson):
                 continue
             if(rjson['result'] == 1):
@@ -233,10 +245,14 @@ class User:
         if(not(self.account['gjData']['url'] and self.account['gjData']['body'])):
             print("未填写逛街数据")
             return
-        url = self.account['gjData']['url']
-        body = self.replaceSig("/rest/r/reward/task/getActivityReward", self.account['gjData']['body'])
-        if(not body):
-            return
+        #签名在链接里
+        if(self.account['gjData']['url'].find("sig=") > 0):
+            url = self.account['gjData']['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/reward/task/getActivityReward", self.account['gjData']['url'].split("?",2)[1])
+            body = self.account['gjData']['body']
+        #签名在请求体里
+        else:
+            url = self.account['gjData']['url']
+            body = self.replaceSig("/rest/r/reward/task/getActivityReward", self.account['gjData']['body'])
         header = {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
@@ -249,6 +265,42 @@ class User:
             print(f"逛街成功：+{rjson['data']['amount']}金币")
         else:
             print("逛街失败："+rjson['error_msg'])
+
+    #直播
+    def zbTask(self):
+        if("zbData" not in self.account):
+            return
+        dataList = self.account['zbData']
+        if(len(dataList) == 0):
+            print("未填写直播数据")
+            return
+        index = 0
+        for data in dataList:
+            index += 1
+            if(not(data['url'] and data['body'])):
+                continue
+            #签名在链接里
+            if(data['url'].find("sig=") > 0):
+                url = data['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/ad/task/report", data['url'].split("?",2)[1])
+                body = data['body']
+            #签名在请求体里
+            else:
+                url = data['url']
+                body = self.replaceSig("/rest/r/ad/task/report", data['body'])
+            header = {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
+                "User-Agent": "kwai-android aegon/2.12.0",
+                "X-REQUESTID": f"{int(time())*10^8}"}
+            rjson = self.post(url, header=header, body=body)
+            if(not rjson):
+                continue
+            if(rjson['result'] == 1):
+                print(f"执行直播数据[{index}]成功：+{rjson['data']['neoAmount']}金币")
+                print("休息5s...")
+                sleep(5)
+            else:
+                print(f"执行直播数据[{index}]失败："+rjson['error_msg'])
 
     # 金币抽奖签到
     def gameSignIn(self):
