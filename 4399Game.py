@@ -5,7 +5,7 @@ import requests
 import json
 from urllib import parse
 
-API_URL = "http://127.0.0.1:8888/4399/sig/?str="
+API_URL = "http://127.0.0.1:8888/4399/sig?str="
 COOKIE_NAME = "gameHeaders"
 warnings.filterwarnings("ignore")
 
