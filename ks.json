@@ -21,22 +21,12 @@
           "url": "https://api2.e.kuaishou.com/rest/r/ad/task/report?mod=HUAWEI%28P40%29&is_background=0&deviceBit=0&oc=ANDROID_SHENMA_ZW_SSYQ_CPC&egid=DFPB5C9C46B0DC28BC8A50BD57F9FC55FA41C7BE2595B9D24831D75E86922430&sbh=48&hotfix_ver=&appver=9.11.50.23442&grant_browse_type=AUTHORIZED&userRecoBit=0&socName=HiSilicon%20Kirin%20820&newOc=ANDROID_SHENMA_ZW_SSYQ_CPC&max_memory=256&isp=&kcv=1474&boardPlatform=kirin820&did_tag=3&sys=ANDROID_7.1.2&sw=720&slh=0&oDid=TEST_ANDROID_610ABBFAC9A09BCD&rdid=ANDROID_690ba5a4e28dae1d&language=zh-cn&ver=9.11&country_code=CN&abi=arm32&kpn=KUAISHOU&sh=1280&app_status=3&nbh=96&cold_launch_time_ms=1660015095844&androidApiLevel=25&kpf=ANDROID_PHONE&browseType=4&did=ANDROID_7A962E41866879B2&ddpi=320&android_os=0&power_mode=0&net=WIFI&app=0&is_app_prelaunching=1&device_abi=arm64&ud=2920371133&c=ANDROID_SHENMA_ZW_SSYQ_CPC&bottom_navigation=true&keyconfig_state=2&ftt=&is_app_prelaunch=0&darkMode=false&totalMemory=7567&iuid=&did_gt=1659889891151"
         }
       ],
-      "lotteryData":[
+      "coinDouble": [
         {
-          "url":"mod=HUAWEI%28P40%29&is_background=0&deviceBit=0&oc=JINGMEI_BAIDU_PINZHUAN%2C1&egid=DFP423EA189E48FB35150A91422F3E80E4E6691859B6BC1BBC18727641996F98&sbh=48&hotfix_ver=&appver=10.7.10.26854&grant_browse_type=AUTHORIZED&userRecoBit=0&socName=HiSilicon%20Kirin%20820&newOc=JINGMEI_BAIDU_PINZHUAN%2C1&max_memory=256&isp=&kcv=1474&boardPlatform=kirin820&did_tag=0&sys=ANDROID_7.1.2&sw=720&slh=0&oDid=ANDROID_BE7E829BAFDA06E5&rdid=ANDROID_908d6dab57d9a1cf&language=zh-cn&ver=10.7&country_code=CN&abi=arm32&kpn=KUAISHOU&cdid_tag=0&sh=1280&nbh=96&cold_launch_time_ms=1660172237410&androidApiLevel=25&earphoneMode=1&kpf=ANDROID_PHONE&browseType=4&did=ANDROID_BE7E829BAFDA06E5&ddpi=320&android_os=0&net=WIFI&app=0&is_app_prelaunching=1&device_abi=&ud=2920371133&c=JINGMEI_BAIDU_PINZHUAN%2C1&bottom_navigation=false&keyconfig_state=2&ftt=&is_app_prelaunch=0&darkMode=false&totalMemory=7567&iuid=&did_gt=1660153504577&__NS_sig3=02136340d4ef2f33064a49488fcba623366aa532575b5543&__NStokensig=e32fa1cf87218d18276310a24d02d4e5bca5ad1f7dee0084cc8635d035b74499&sig=344caf01e2a5a8edb4eeea0e4cc64e79",
-          "body":"bizStr=%7B%22businessId%22%3A161%2C%22endTime%22%3A1660172389054%2C%22extParams%22%3A%2256dfe31594b858e69ef613f5e97227fbfd679c81c5a8b5dcf1ec058586f79d3dcf13ef271e4bfb6d578149bba8e6f01cc471597015737abd81a607c8dfeaa92e887f1211859e041e507b5a3a6f707309096a76a735861ae98f1d39daffcc4763c4aeee175f909469429a6b3b40d13d0c2e49a4fed7013b260bc2ad61e47b40621d476d6451ac368bc1043b2e8d2c1abd0e34e15714d173a9b66ad4db196775684d99a86259dd2937db74a049c43dc4127f63304530a21c4dc0fde4631e39e34989a43942e9c7870488afa508c44e3e2b6cfb1b9d74f037f455b767077998be02%22%2C%22mediaScene%22%3A%22video%22%2C%22neoInfos%22%3A%5B%7B%22creativeId%22%3A24901385875%2C%22extInfo%22%3A%22%22%2C%22llsid%22%3A2005327596921381921%2C%22taskType%22%3A1%7D%5D%2C%22pageId%22%3A100011251%2C%22posId%22%3A4688%2C%22reportType%22%3A0%2C%22startTime%22%3A1660172338156%2C%22subPageId%22%3A100013633%7D&kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAHacXNU19mQ3uolkx-Tzg1ecv_Xh7nTfGbdLjfv5zaq0YinZVQyGWKMOM3CHgblFudCH_e3t5biLGyL2u8vMIBIWm8Xc1l-HkUiWb5zTS4NB4dmgPt1FSnJgrKE0c7GQw4Kr2_WCOydxRq1GNB8co7eCwScCnTn7pYjUhJYKTmdNHxT5Vy5Rfa3NgNECjG-D1AV_cZ-qA2R2zwvJI0zzlreGhJyESpTOl5I_JMcRn3Byf2u1vciIHZuJTJHMfHV76pkmIrO3wkm-TU1j-IkNSA4VWNk4ySsKAUwAQ&token=b49d0ffe2c2e44f8b8c64b3f5962df98-2920371133&client_key=3c2cd3f3&client_salt=55ac69fd171e0ae6ec0c56ffbef1a803&uQaTag=0&cs=false&os=android"
+          "url": "https://api2.e.kuaishou.com/rest/r/ad/task/report?mod=HUAWEI%28P40%29&is_background=0&deviceBit=0&oc=JINGMEI_BAIDU_PINZHUAN%2C1&egid=DFP423EA189E48FB35150A91422F3E80E4E6691859B6BC1BBC18727641996F98&sbh=48&hotfix_ver=&appver=10.7.10.26854&grant_browse_type=AUTHORIZED&userRecoBit=0&socName=HiSilicon%20Kirin%20820&newOc=JINGMEI_BAIDU_PINZHUAN%2C1&max_memory=256&isp=&kcv=1474&boardPlatform=kirin820&did_tag=0&sys=ANDROID_7.1.2&sw=720&slh=0&oDid=ANDROID_073470A73918C97F&rdid=ANDROID_908d6dab57d9a1cf&language=zh-cn&ver=10.7&country_code=CN&abi=arm32&kpn=KUAISHOU&cdid_tag=0&sh=1280&nbh=96&cold_launch_time_ms=1660369941947&androidApiLevel=25&earphoneMode=1&kpf=ANDROID_PHONE&browseType=4&did=ANDROID_073470A73918C97F&ddpi=320&android_os=0&net=WIFI&app=0&is_app_prelaunching=1&device_abi=&ud=2920371133&c=JINGMEI_BAIDU_PINZHUAN%2C1&bottom_navigation=false&keyconfig_state=2&ftt=&is_app_prelaunch=0&darkMode=false&totalMemory=7567&iuid=&did_gt=1660153504577&__NStokensig=a072de1f49140b74517b6e375ca809cf5477e4bd225d1861d0d5e95bca42e57e&__NS_sig3=4f5e2e0ded61230d5607040553fff1069923eb7f1a16180e&sig=040971d7688d0fe1a1bc7a9461e51bd3",
+          "body": "bizStr=%7B%22businessId%22%3A161%2C%22endTime%22%3A1660370054940%2C%22extParams%22%3A%2256dfe31594b858e69ef613f5e97227fb5adfcb07a1f2f2d3a8374f501033e56776007798b9268f6c33c4ad7329969c5d8af981db768e841b02600f689cf6e3d729d012b6bb8c6c0fb7a408eb1809513ffb0db233d18d4c01d51b5641e31b1d80d1bf1c62f48df03b9477d81c3d8bb39e046ac9b513426d7307d8e8b96ea5b6f8494310be6041ce322f8714539cf26049b6feff8cdf35de0847e22e896d0eb6d9eb49c434fba5d8e671122bda8296fb9c797ef0bb5f4ca8660b90cc1816cb523f22216ec66460d4398dab797286539b4db9233c30e94cbf74b4d57735a87993ce%22%2C%22mediaScene%22%3A%22video%22%2C%22neoInfos%22%3A%5B%7B%22creativeId%22%3A25009265074%2C%22extInfo%22%3A%22%22%2C%22llsid%22%3A2005326044400730641%2C%22taskType%22%3A1%7D%5D%2C%22pageId%22%3A100011251%2C%22posId%22%3A4687%2C%22reportType%22%3A0%2C%22startTime%22%3A1660370024253%2C%22subPageId%22%3A100013632%7D&kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAHacXNU19mQ3uolkx-Tzg1ecv_Xh7nTfGbdLjfv5zaq0YinZVQyGWKMOM3CHgblFudCH_e3t5biLGyL2u8vMIBIWm8Xc1l-HkUiWb5zTS4NB4dmgPt1FSnJgrKE0c7GQw4Kr2_WCOydxRq1GNB8co7eCwScCnTn7pYjUhJYKTmdNHxT5Vy5Rfa3NgNECjG-D1AV_cZ-qA2R2zwvJI0zzlreGhJyESpTOl5I_JMcRn3Byf2u1vciIHZuJTJHMfHV76pkmIrO3wkm-TU1j-IkNSA4VWNk4ySsKAUwAQ&token=b49d0ffe2c2e44f8b8c64b3f5962df98-2920371133&client_key=3c2cd3f3&client_salt=55ac69fd171e0ae6ec0c56ffbef1a803&uQaTag=0&cs=false&os=android"
         }
       ]
-    },
-    {
-      "remark": "131-8972-支",
-      "cookie": "kpn=KUAISHOU; kpf=ANDROID_PHONE; userId=2947199502; language=zh-cn; countryCode=CN; sys=ANDROID_7.1.2; mod=HUAWEI%28P40%29; net=WIFI; deviceName=HUAWEI%28P40%29; is_background=0; deviceBit=0; sbh=48; hotfix_ver=; grant_browse_type=AUTHORIZED; userRecoBit=0; socName=HiSilicon+Kirin+820; max_memory=256; isp=; kcv=1474; boardPlatform=kirin820; sw=720; slh=0; rdid=ANDROID_de6dee1a765c40d7; country_code=CN; sh=1280; nbh=96; androidApiLevel=25; earphoneMode=1; browseType=4; ddpi=320; android_os=0; app=0; is_app_prelaunching=1; device_abi=; cl=0; ud=2947199502; bottom_navigation=false; keyconfig_state=2; ftt=; is_app_prelaunch=0; darkMode=false; totalMemory=7567; iuid=; did_gt=1659452810547; token=bdd5bdd9b48c42adaf6c87247e0f967a-2947199502; client_key=3c2cd3f3; did=ANDROID_E4E62DE9ECD46518; c=JINGMEI_BAIDU_PINZHUAN%2C1; ver=10.7; appver=10.7.10.26854; oc=JINGMEI_BAIDU_PINZHUAN%2C1; egid=DFPABCEA00D704947320D0CA01D35243FF2D69EB5F0D42F2CA55E14C074674EF; newOc=JINGMEI_BAIDU_PINZHUAN%2C1; did_tag=0; oDid=ANDROID_E4E62DE9ECD46518; abi=arm32; cdid_tag=0; sid=c6f69aba-bf60-4ab9-8b5f-532f6f24b311; cold_launch_time_ms=1660169475674; kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAGJ3VU3cVe2oUySmzkgInp--uJvTeJQ2-0yvIBFEuRzAOVg46dIcLLKvkgsxyN2GgE9rPUTdtBg_RxYiNqCguq_ccx6iNvILLUBJtXyxYeTgPzCti80hQlcdfFcNXmpdeDwQjI4Zw47ygweHqbpfNVS7I7CcmZlQuE1x5kyt_6WTgvCemHzFHCIrUXKDTPRq0rqW3WfoqLhGIDjmiWFX7CpGhJrNN-fL8lNH4AKLNFPdkh-L7kiINQnWEsuf6d3d1ibE22H_ObYBOoliRR9fWMoKsLqZmONKAUwAQ; kuaishou.h5_st=Cg5rdWFpc2hvdS5oNS5zdBKgAaRnp63HtBTwxJo7bR4rXimf6kSpwwW9FAVBujA_J7eolUWrlA3CQAD2v88JtsqsCdsoq89HrZcEhBRXeyzDA1PS40WWvUDq35dh8branpML_XpzqdkLDoXtLE2NW6pgFmR3Bywds0l1v83frJGURbux9xreVk4bCnpXgauJGPnX5488KgUR4C4tsXVHGXxpE9TJIE1jWfn700Cn92UhobMaEn0DMNGTGbtZm1-Kfj1W_J6I5SIgo-krnZvRietyt9qA0ww19Y5INV1VIAth4Pq0WnahEB4oBTAB; __NSWJ=%2FiIlPN4rYux4RLCujJRjh5P4X4gSb2cZGAw6MKSoR3FiAHfS%2F5TwWNlCirZnoS6BAAAAAQ%3D%3D",
-      "ggData": [],
-      "gjData": {
-        "body": "",
-        "url": ""
-      },
-      "lotteryData":[]
     },
     {
       "remark": "131-8972-微",
@@ -46,7 +36,7 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     },
     {
       "remark": "130-6642",
@@ -56,29 +46,8 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     },
-    {
-      "remark": "135-9623-微",
-      "cookie": "kpn=KUAISHOU; kpf=ANDROID_PHONE; c=BAIDU_SEM_YUNHAI; ver=10.5; appver=10.5.10.26042; language=zh-cn; countryCode=CN; sys=ANDROID_7.1.2; net=WIFI; is_background=0; deviceBit=0; oc=BAIDU_SEM_YUNHAI; sbh=48; hotfix_ver=; grant_browse_type=AUTHORIZED; userRecoBit=0; socName=HiSilicon+Kirin+970; newOc=BAIDU_SEM_YUNHAI; max_memory=256; boardPlatform=kirin970; sw=720; slh=0; abi=arm32; sh=1280; nbh=96; androidApiLevel=25; browseType=4; ddpi=320; android_os=0; app=0; is_app_prelaunching=1; device_abi=; cl=0; bottom_navigation=false; keyconfig_state=2; ftt=; is_app_prelaunch=0; darkMode=false; totalMemory=5666; iuid=; client_key=3c2cd3f3; kcv=1474; didv=1655482291000; earphoneMode=1; mod=HUAWEI%28P40%29; deviceName=HUAWEI%28P40%29; isp=; country_code=CN; oDid=TEST_ANDROID_7B9CEFAEC7A98CA9; userId=2866167953; did_tag=3; rdid=ANDROID_54783fdef635c11a; ud=2866167953; did_gt=1658245454928; token=f3db561070204803a3d2280761d5840b-2866167953; did=ANDROID_48001966181295AB; egid=DFP94113089974D682D4D66D5F5ECEA0036EB05C6F21154A48613FA9534D1B38; sid=c31ca027-b282-43c0-82c7-529571e290be; cold_launch_time_ms=1658878100003; kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAFOKdy91wAmExzdP_H2Ir3xFTFxQbgAiGe4HFLXC14TsIXhDz65DdFzkWe-gmD8pbdw56nYq5WCR1ZyJfmuIr7Fq10iv5iMXFp-YxOCZS4KG6WuYV5qgj3O82YCrH_sYvAmT-Vgj9Js9WWNYyGyn1oWhZMlWsmNTzgkMnvCXyKVOJI3e_SnV2VILkn9V3ijD12SSrPRu0kyV-BkB9DQ3T3nGhJrNN-fL8lNH4AKLNFPdkh-L7kiIJeosvTvLfPaKsThmGnrb3HzOurpUa-4xvaa6AhvCxOVKAUwAQ; kuaishou.h5_st=Cg5rdWFpc2hvdS5oNS5zdBKgAbMgSEAQrbGNyUnffb15kLx4KXKaq9PMLCosPV5_zIf9-7SdOtGi2jvCsNVha0hswuIm8pkKRFzVBHxAQtEKUI6_j04EZax1MK94BnM1Str410ZS_Y6KthdzMSR0kVpf6yrHPGwIU8GFkw0HaKo191ovpmCJtOQjZd4Yc2dhmkFnjT-L25kc5ZaspjE_468L-6Tt5HmRMTn4QeNCaltFRYsaElvrn4oKoX95QYHbaBfIBtv_wiIgtHU7k3dd6m6qyaAstXoZTP5taXm2UP1kWZtxgT8TR-UoBTAB; __NSWJ=2NvB6v6MFX8ILDnU3GhkeUYpoxMUO6iDIP%2B0vQtmdqcfITDYi0Tfp6f0wlUIO6OTAAAAMA%3D%3D",
-      "ggData": [],
-      "gjData": {
-        "body": "",
-        "url": ""
-      },
-      "lotteryData":[]
-    },
-    {
-      "remark": "135-9623-支",
-      "cookie": "kpn=KUAISHOU; kpf=ANDROID_PHONE; userId=2670521546; c=HUAWEI; ver=10.5; appver=10.5.31.26318; language=zh-cn; countryCode=CN; sys=ANDROID_7.1.2; mod=HUAWEI%28CDY-AN00%29; net=WIFI; deviceName=HUAWEI%28CDY-AN00%29; is_background=0; deviceBit=0; oc=HUAWEI; egid=DFP206DDE61133E02D27B3E49CE1F7D05256A8BBB6543378C89CCF69B5F1BE27; sbh=48; hotfix_ver=; grant_browse_type=AUTHORIZED; userRecoBit=0; socName=HiSilicon+Kirin+820; newOc=HUAWEI; max_memory=256; isp=; kcv=1474; boardPlatform=kirin820; did_tag=3; sw=720; slh=0; rdid=ANDROID_693b9f2fdca49921; oDid=TEST_ANDROID_00CAD9E2797995C3; country_code=CN; abi=arm64; sh=1280; nbh=96; androidApiLevel=25; earphoneMode=1; browseType=4; ddpi=320; android_os=0; app=0; is_app_prelaunching=1; device_abi=; cl=0; ud=2670521546; bottom_navigation=false; keyconfig_state=2; ftt=; is_app_prelaunch=0; darkMode=false; totalMemory=7567; iuid=; did_gt=1659871235490; kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAGIb20InRtcXKNVbS771UdRr--9lFs8kKCARUokSOgH8Jc2MYrIiWHUMQB_UIT6suY4JpJz62jhFJUVRbyhjWVkML-TH3FdnWPAWHvTzK_PIgHtRMDH3Y6m1WRAJYdOrycK5DdOXfdkOkytlNMh1g6OMUEhtmUVVYnkvSsShdjq8b9JCVhgbuILZZLrNk6gLymZpgd8tRtDXSKjF0lRcvvRGhJQViwWWuREjLU9a7lIv7onMn4iIBXupQ0BD4EsqnnFGbweAidugn8tatdEr4P6YzUEYjH_KAUwAQ; token=6c7f2886a8f84644b11daaffa0fe8d5c-2670521546; kuaishou.h5_st=Cg5rdWFpc2hvdS5oNS5zdBKgAQpAwF_utZvnskBIyKjbc9AFiR1BW7LLACIgZXBISq9o5gE8b2Rg-CCu00DStjCWQGnEuRLB15LZCFeTanj-0PtUr1xDUXioHQykAtzBp04RO2yVWhJLqDee90knP-U25tbBSO5MrtR1QFcQIAU0JRqKHwOs82T4PHEbG9JK1OBWagrKe5Do4j70KHhZuS88StLZCjoaQoDUX4otPVd14asaEqWAqa4qaXGcL-RKnK6eSUQY8iIgAPYzBNlXQLmMGUBbaMpTpNgozLAxLXpJcaoy2qoAN7MoBTAB; client_key=3c2cd3f3; did=ANDROID_5AF421F21D433050; sid=939034a6-f9d2-4345-861e-59dd499bf25f; cold_launch_time_ms=1660223789548; __NSWJ=5OuYWbZ84w1wwoUXPquR1lAuXPmvicdBTYu%2BDVkSl%2FouvF%2FinpNnVMwmGpkJxSFNAAAAAQ%3D%3D",
-      "ggData": [],
-      "gjData": {
-        "body": "",
-        "url": ""
-      },
-      "lotteryData":[]
-    }
-    ,
     {
       "remark": "183-9623-支",
       "cookie": "kpn=KUAISHOU; kpf=ANDROID_PHONE; userId=2920496421; language=zh-cn; countryCode=CN; sys=ANDROID_7.1.2; mod=HUAWEI%28P40%29; net=WIFI; deviceName=HUAWEI%28P40%29; is_background=0; deviceBit=0; sbh=48; hotfix_ver=; grant_browse_type=AUTHORIZED; userRecoBit=0; socName=HiSilicon+Kirin+820; max_memory=256; isp=; kcv=1474; boardPlatform=kirin820; sw=720; slh=0; rdid=ANDROID_77715420935b1828; country_code=CN; abi=arm64; sh=1280; nbh=96; androidApiLevel=25; browseType=4; ddpi=320; android_os=0; app=0; is_app_prelaunching=1; device_abi=; cl=0; ud=2920496421; bottom_navigation=false; keyconfig_state=2; ftt=; is_app_prelaunch=0; darkMode=false; totalMemory=7567; iuid=; did_gt=1657447461287; token=7c9c0c4f39b44b8ca05c2830a71b292a-2920496421; client_key=3c2cd3f3; didv=1657449286000; kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAF9JPE09YvJztEL4XiTyPZksYUEY4gC9sqUC66xDFw8IFsTSJUahd7809khbhvsRC_4hzLgT6C_g_XiaoWMsXaClCrsvfP1EfMH-YlyRuEMvz3vfCG1J86Kv2bHRJtxfBuNPaS_hKGaZPnjuyZZUUBksME8Xjgerw8Weck1rQL3f_bzSw8DTvxyMo0_978runLhfE0rnvLDoI6SHjosQcV4GhKjQoq9LKlLfKVheT8jegRWfMAiIMPmYRkrykO9-lvDqQch4njfGM34E8a2CjF1hzQYuUwGKAUwAQ; kuaishou.h5_st=Cg5rdWFpc2hvdS5oNS5zdBKgAb0HlZzXMgl5UpXovDb_GNMD6zNFf12XZ63965PNKpwHpc3KDwsFVRMJEP3Kwn8aXvW5NPZ31_AuqTGzChLaXXdBATT2yiI5JUTb5z9ZnV6-Uy6-Vis7nWmcZhB9VGmoLAk9Pwg-956ZjGOX9XuwAHJ25XJW131duGBbuwhqV9jCdq2jS2UsMUQf3LO9vm81MV0tGY2Tkjs-Rw8syaHKfJMaEjkbXV6SHoyyVlrAA_U24ozgMSIg14Qy8XNNJI1o3Qws-IUtkoXzdwfrLqDZsX2G7SdR-QYoBTAB; c=GENERIC; ver=10.7; appver=10.7.10.26854; oc=GENERIC; egid=DFP2EEC83353C3E24C0B467D149AFF3EC8BAD224C557CC87EE9F9633C3D8DCD9; newOc=GENERIC; did_tag=0; cdid_tag=0; earphoneMode=1; did=ANDROID_69E546F48E84D21D; oDid=ANDROID_69E546F48E84D21D; sid=fdd7dd4c-80d0-4de5-8227-d6803beec975; cold_launch_time_ms=1660223397944; __NSWJ=63e%2BmDn3L11ula%2FtGR1I773AgPDzKxILtPSBzHBJuwdoLMRZLU1pVmHKgf5bz8hdAAAAAQ%3D%3D",
@@ -87,7 +56,7 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     },
     {
       "remark": "ycs-1",
@@ -97,7 +66,7 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     },
     {
       "remark": "ycs-2",
@@ -107,7 +76,7 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     },
     {
       "remark": "ycs-3",
@@ -117,7 +86,7 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     },
     {
       "remark": "ycs-4",
@@ -127,7 +96,7 @@
         "body": "",
         "url": ""
       },
-      "lotteryData":[]
+      "lotteryData": []
     }
   ]
 }

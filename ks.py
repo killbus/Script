@@ -6,7 +6,7 @@ import requests
 
 PROJECT_NAME = "ks"
 API_NAME = "ksApi"
-API_URL = "http://127.0.0.1:8888/ks/sig?str="
+API_URL = "http://192.168.3.33:8888/ks/sig?str="
 
 class User:
 
@@ -26,7 +26,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers,timeout=3)
+            res = requests.get(url, headers=headers, timeout=3)
             if(isText):
                 return res.text
             else:
@@ -46,7 +46,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers,timeout=3)
+            res = requests.post(url, data=body, headers=headers, timeout=3)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
@@ -107,13 +107,13 @@ class User:
                     print("金币签到：已签到")
                 else:
                     print("金币签到：未签到")
-                    self.sign(sevenDaysSignInData['signInBizId'])
+                    self.signIn(sevenDaysSignInData['signInBizId'])
             elif("cashSignInData" in rjson['data']):
                 cashSignInData = rjson['data']['cashSignInData']
                 currentDay = cashSignInData['currentDay']
-                if(cashSignInData['tasks'][currentDay-1]['status'] !=2):
+                if(cashSignInData['tasks'][currentDay-1]['status'] != 2):
                     print("金币签到：未签到")
-                    self.sign(cashSignInData['signInBizId']) 
+                    self.signIn(cashSignInData['signInBizId'])
                 else:
                     print("金币签到：已签到")
             else:
@@ -121,12 +121,12 @@ class User:
                     print("金币签到：已签到")
                 else:
                     print("金币签到：未签到")
-                    self.sign(0)
+                    self.signIn(0)
         elif("error_msg" in rjson):
             print("获取签到信息失败：{0}".format(rjson['error_msg']))
 
     # 签到
-    def sign(self, id):
+    def signIn(self, id):
         url = "https://encourage.kuaishou.com/rest/wd/encourage/signIn/report"
         body = {"signInBizId": id}
         header = {"content-type": "application/json"}
@@ -145,7 +145,7 @@ class User:
         if(not rjson or not rjson['data']):
             return
         if(rjson['result'] == 1):
-            print(f"宝箱总额：{rjson['data']['treasureRewardAmountEveryDay']}")
+            print(f"宝箱今日总额：{rjson['data']['treasureRewardAmountEveryDay']}")
             status = rjson['data']['status']
             # status 2领取中 3冷却完成 4次数已完
             if(status == 4):
@@ -195,28 +195,28 @@ class User:
         else:
             print("获取任务列表失败："+rjson['error_msg'])
 
-    #广告
+    # 广告
     def ggTask(self):
+        if("ggData" not in self.account):
+            return
         adList = self.account['ggData']
-        if(len(adList)==0):
+        if(len(adList) == 0):
             print("未填写广告数据")
             return
         index = 0
         for ad in adList:
-            index +=1
+            index += 1
             if(not(ad['url'] and ad['body'])):
-                print("未填写广告数据")
                 continue
-            url = ad['url']
-            body = self.replaceSig("/rest/r/ad/task/report",ad['body'])
+            body = self.replaceSig("/rest/r/ad/task/report", ad['body'])
             if(not body):
                 continue
             header = {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
-            "User-Agent": "kwai-android aegon/2.12.0",
-            "X-REQUESTID": f"{int(time())*10^8}"}
-            rjson = self.post(url, header=header, body=body)
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
+                "User-Agent": "kwai-android aegon/2.12.0",
+                "X-REQUESTID": f"{int(time())*10^8}"}
+            rjson = self.post(ad['url'], header=header, body=body)
             if(not rjson):
                 continue
             if(rjson['result'] == 1):
@@ -228,6 +228,8 @@ class User:
 
     # 逛街
     def gjTask(self):
+        if("gjData" not in self.account):
+            return
         if(not(self.account['gjData']['url'] and self.account['gjData']['body'])):
             print("未填写逛街数据")
             return
@@ -252,10 +254,10 @@ class User:
     def gameSignIn(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/sign-in"
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.get(url,header=header)
+        rjson = self.get(url, header=header)
         if(not rjson):
             self.gameValid = False
             return
@@ -264,34 +266,35 @@ class User:
         else:
             self.gameValid = False
 
-    #金币抽奖信息
+    # 金币抽奖信息
     def gameInfo(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/user/info"
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.get(url,header=header)
+        rjson = self.get(url, header=header)
         if(not rjson):
             return
         if(rjson['result'] == 1):
-            print("===>金币抽奖")
             print(f"积累金币：{rjson['data']['userCoinResult']['coins']}")
-            print(f"宝石进度：{rjson['data']['userDiamondResult']['diamondPercent']}")
-            print(f"可抽奖次数：{rjson['data']['userDailyLotteryTimesResult']['remainTimes']}")
-            if(rjson['data']['userDailyLotteryTimesResult']['remainTimes'] >0):
+            print(
+                f"宝石进度：{rjson['data']['userDiamondResult']['diamondPercent']}")
+            print(
+                f"可抽奖次数：{rjson['data']['userDailyLotteryTimesResult']['remainTimes']}")
+            if(rjson['data']['userDailyLotteryTimesResult']['remainTimes'] > 0):
                 self.gameLottery()
         else:
             print("获取抽奖信息失败："+rjson['error_msg'])
 
-    #金币抽奖定时奖励信息
+    # 金币抽奖定时奖励信息
     def gameTimerInfo(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/timer-reward/info"
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.get(url,header=header)
+        rjson = self.get(url, header=header)
         if(not rjson):
             return
         if(rjson['result'] == 1):
@@ -305,14 +308,14 @@ class User:
         else:
             print("获取定时奖励信息失败："+rjson['error_msg'])
 
-    #金币抽奖定时奖励领取
+    # 金币抽奖定时奖励领取
     def gameTimerReqward(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/timer-reward"
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.post(url,header=header)
+        rjson = self.post(url, header=header)
         if(not rjson):
             return
         if(rjson['result'] == 1):
@@ -320,57 +323,60 @@ class User:
         else:
             print("领取定时奖励失败："+rjson['error_msg'])
 
-    #金币抽奖
+    # 金币抽奖
     def gameLottery(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/lottery?wheelVersion=1"
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.post(url,header=header)
+        rjson = self.post(url, header=header)
         if(not rjson):
             return
         if(rjson['result'] == 1):
-            print(f"抽奖成功：+{rjson['data']['coinCount']}金币  +{rjson['data']['diamondCount']}钻石")
+            print(
+                f"抽奖成功：+{rjson['data']['coinCount']}金币  +{rjson['data']['diamondCount']}钻石")
         else:
             print("抽奖失败："+rjson['error_msg'])
 
-    #金币抽奖看视频
-    def gameView(self):
-        adList = self.account['lotteryData']
-        if(len(adList)==0):
-            print("未填写金币抽奖视频数据")
+    # 金币抽奖翻倍
+    def gameCoinDouble(self):
+        if("coinDouble" not in self.account):
+            return
+        adList = self.account['coinDouble']
+        if(len(adList) == 0):
+            print("未填写金币抽奖金币翻倍数据")
             return
         index = 0
         for ad in adList:
-            index +=1
+            index += 1
             if(not(ad['url'] and ad['body'])):
                 continue
-            params = self.replaceSig("/rest/r/ad/task/report",ad['url'])
-            if(not params):
+            url = "https://api2.e.kuaishou.com/rest/r/ad/task/report?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?",2)[1])
+            if(not url):
                 continue
-            url = "https://api.e.kuaishou.com/rest/r/ad/task/report?"+params
             header = {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
-            "User-Agent": "kwai-android aegon/2.12.0",
-            "X-REQUESTID": f"{int(time())*10^8}"}            
-            rjson = self.post(url,ad['body'],header=header)        
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
+                "User-Agent": "kwai-android aegon/2.12.0",
+                "X-REQUESTID": f"{int(time())*10^8}"}
+            rjson = self.post(url, ad['body'], header=header)
             if(rjson['result'] == 1):
-                print(f"浏览金币抽奖视频[{index}]成功")
+                print(f"执行金币翻倍数据[{index}]成功")
+                print(json.dumps(rjson, indent=2))
                 print("休息5s...")
                 sleep(5)
             else:
-                print(f"浏览金币抽奖视频[{index}]失败："+rjson['error_msg'])
-    
-    #金币抽奖任务
+                print(f"执行金币翻倍数据[{index}]失败："+rjson['error_msg'])
+
+    # 金币抽奖任务
     def gameTasks(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/tasks"
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.get(url,header=header)
+        rjson = self.get(url, header=header)
         if(not rjson):
             return
         if(rjson['result'] == 1):
@@ -385,47 +391,51 @@ class User:
                     print(f"任务[{dailyTask['taskTitle']}]可领取奖励")
                     self.gameTasksReward(growthTask)
         else:
-            print("获取任务失败："+rjson['error_msg'])        
+            print("获取任务失败："+rjson['error_msg'])
 
-    #金币抽奖领取任务奖励
-    def gameTasksReward(self,task):
-        url = "https://activity.e.kuaishou.com/rest/r/game/task/reward-receive?taskName="+task['taskName']
+    # 金币抽奖领取任务奖励
+    def gameTasksReward(self, task):
+        url = "https://activity.e.kuaishou.com/rest/r/game/task/reward-receive?taskName=" + \
+            task['taskName']
         header = {
-            "X-Requested_With":"com.smile.gifmaker",
-            "Referer":"https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
+            "X-Requested_With": "com.smile.gifmaker",
+            "Referer": "https://activity.e.kuaishou.com/incentiveAdvertising?layoutType=4"
         }
-        rjson = self.get(url,header=header)
+        rjson = self.get(url, header=header)
         if(not rjson):
-            return    
+            return
         if(rjson['result'] == 1):
             if(rjson['data']['success']):
                 print(f"领取任务[{task['taskTitle']}]成功")
             else:
-                print(f"领取任务[{task['taskTitle']}]奖励失败："+rjson['data']['msg'])          
+                print(f"领取任务[{task['taskTitle']}]奖励失败："+rjson['data']['msg'])
         else:
-            print(f"领取任务[{task['taskTitle']}]奖励失败："+rjson['error_msg'])          
+            print(f"领取任务[{task['taskTitle']}]奖励失败："+rjson['error_msg'])
 
     def run(self):
-        print(f"=====账号[{self.index}]=====")
+        print(f"=======账号[{self.index}]=======")
         if(self.account['remark']):
             print("账号备注："+self.account['remark'])
         self.home()
         if(self.valid):
             self.signInfo()
+            print("\n>>>定时宝箱")
             self.getBoxInfo()
-            print("")
+            print("\n>>>日常任务")
             self.getTasks()
+            print("")
             self.gameSignIn()
             if(self.gameValid):
-                print("")
+                print(">>>金币抽奖")
                 self.gameInfo()
                 self.gameTimerInfo()
-                self.gameView()
                 self.gameTasks()
-            print("")
+            self.gameCoinDouble()
+            print("\n")
 
 
 def initEnv() -> list:
+    global API_URL,API_NAME
     accountList = []
     filePath = sys.path[0]
     if(filePath.find("\\") != -1):
@@ -457,6 +467,7 @@ if __name__ == "__main__":
         if(account["cookie"]):
             users.append(User(account, index))
             index += 1
+    print(f"共找到{len(users)}个账号\n")
     for user in users:
         try:
             user.run()
