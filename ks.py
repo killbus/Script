@@ -26,7 +26,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers, timeout=3)
+            res = requests.get(url, headers=headers, timeout=5)
             if(isText):
                 return res.text
             else:
@@ -46,7 +46,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers, timeout=3)
+            res = requests.post(url, data=body, headers=headers, timeout=5)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
