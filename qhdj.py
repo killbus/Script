@@ -1,10 +1,8 @@
 import base64
 import hashlib
 import json
-from math import fabs
 import os
 from random import randint
-from re import T
 from time import sleep, time
 from urllib.parse import urlencode
 import warnings
@@ -13,6 +11,7 @@ import requests
 COOKIE_NAME = "qhdj"
 adventureIds = []
 userIds = []
+
 warnings.filterwarnings("ignore")
 
 class User:
@@ -25,7 +24,6 @@ class User:
         else:
             self.valid = False
 
-   # 统一GET 额外header用字典传递
     def get(self, url, header=None, isText=False):
         headers = {
             "Content-Type": "application/json",
@@ -36,7 +34,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.get(url, headers=headers, timeout=3, verify=False)
+            res = requests.get(url, headers=headers, timeout=5, verify=False)
             if(isText):
                 return res.text
             else:
@@ -45,7 +43,6 @@ class User:
             print("GET异常：{0}".format(str(e)))
             return None
 
-    # 统一POST 额外header用字典传递
     def post(self, url, body='', header=None):
         headers = {
             "Content-Type": "application/json",
@@ -57,7 +54,7 @@ class User:
         # 捕获异常
         try:
             res = requests.post(
-                url, data=body, headers=headers, timeout=3, verify=False)
+                url, data=body, headers=headers, timeout=5, verify=False)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
@@ -258,7 +255,7 @@ class User:
         rjson = self.get(url)
         if(not rjson):
             return
-        if(rjson['code']):
+        if(rjson['code'] == 0):
             print("领取冒险奖励成功")
         else:
             print(f"领取冒险奖励失败：{rjson['message']}")
@@ -352,6 +349,7 @@ class User:
         else:
             print("开始挑战游戏失败："+rjson['message'])
 
+    #挑战完成
     def challengeFinish(self,battleId):
         params = self.getSign()
         body = {"battleId":battleId,"result":1,"costMillisecond":6000}

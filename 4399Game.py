@@ -19,7 +19,7 @@ class User:
         if(header):
             headers.update(header)
         try:
-            res = requests.get(url, headers=headers,verify=False)
+            res = requests.get(url, headers=headers,verify=False,timeout=5)
             if(isText):
                 return res.text
             return res.json()
@@ -33,7 +33,7 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers,verify=False)
+            res = requests.post(url, data=body, headers=headers,verify=False,timeout=5)
             return res.json()
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
@@ -49,7 +49,6 @@ class User:
         res.pop("Content-Length", "")
         return res
 
-    # 获取Sign
     def getSign(self, param):
         url = API_URL+parse.quote(param)
         return self.get(url, isText=True)
@@ -114,7 +113,6 @@ class User:
         else:
             print("今日未签到")
             #self.signIn(sign['signed_day'])
-
     #签到
     def signIn(self, day):
         url = "https://mapi.yxhapi.com/android/box/v3.0/sign-in.html"
@@ -263,6 +261,6 @@ if __name__ == "__main__":
     for account in accounts:
         users.append(User(account, index))
         index += 1
-
+    print(f"共找到{len(users)}账号\n")
     for user in users:
         user.run()
