@@ -338,6 +338,7 @@ class User:
             return
         if(rjson['code'] == 0):
             print(f"收获成功")
+            self.plantStart()
         else:
             print("收获失败："+rjson['message'])
 
