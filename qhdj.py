@@ -288,13 +288,33 @@ class User:
             return
         if(rjson['code'] == 0):
             self.plantId = rjson['data']['plantId']
+            if(not self.plantId):
+                self.plantStart()
+                return
             print(f"种植阶段：{rjson['data']['stage']}")
             print(f"阶段进度：{rjson['data']['currentSunshineNum']}/{rjson['data']['needSunshineNum']}")
             if(rjson['data']['currentSunshineNum'] == rjson['data']['needSunshineNum']):
-                self.plantUpgrade()
+                if(rjson['data']['stage'] == 3):
+                    print("番茄已成熟，准备收取")
+                    self.plantHarvest()
+                else:
+                    print("进度已满，准备升级")
+                    self.plantUpgrade()
         else:
             print("获取种植信息失败："+rjson['message'])        
     
+    #种植开始
+    def plantStart(self):
+        params = self.getSign()
+        url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/start?{urlencode(params)}"
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"种植成功")
+        else:
+            print("种植失败："+rjson['message'])        
+
     #种植升级
     def plantUpgrade(self):
         params = self.getSign()
@@ -308,6 +328,19 @@ class User:
         else:
             print("种植进阶失败："+rjson['message'])
     
+    #种植收获
+    def plantHarvest(self):
+        params = self.getSign()
+        params['plantId'] = self.plantId
+        url = f"https://api.xiaoyisz.com/qiehuang/ga/plant/harvest?{urlencode(params)}"
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"收获成功")
+        else:
+            print("收获失败："+rjson['message'])
+
     #每日阳光
     def dailyInfo(self):
         params = self.getSign()
