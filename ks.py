@@ -8,6 +8,7 @@ PROJECT_NAME = "ks"
 API_NAME = "ksApi"
 API_URL = "http://192.168.3.33:8888/ks/sig?str="
 
+
 class User:
 
     def __init__(self, account, index=1) -> None:
@@ -186,19 +187,19 @@ class User:
         if(rjson['result'] == 1):
             taskList = rjson['data']['dailyTasks']['taskList']
             for task in taskList:
-                #广告任务
+                # 广告任务
                 if(task['taskId'] == 100):
                     print(task['subTitle'])
                     if(task['subTitle'].find("10/10") == -1):
                         self.ggTask()
-                #逛街任务
+                # 逛街任务
                 elif(task['taskId'] == 203):
                     print(task['subTitle'])
                     if(task['subTitle'].find("10/10") == -1):
                         self.gjTask()
-                elif(task['taskId'] == 101):
-                    print("直播任务")
-                    self.zbTask()  
+                # elif(task['taskId'] == 101):
+                #     print("直播任务")
+                #     self.zbTask()
         else:
             print("获取任务列表失败："+rjson['error_msg'])
 
@@ -215,11 +216,12 @@ class User:
             index += 1
             if(not(ad['url'] and ad['body'])):
                 continue
-            #签名在链接里
+            # 签名在链接里
             if(ad['url'].find("sig=") > 0):
-                url = ad['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?",2)[1])
+                url = ad['url'].split("?", 2)[
+                    0]+"?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?", 2)[1])
                 body = ad['body']
-            #签名在请求体里
+            # 签名在请求体里
             else:
                 url = ad['url']
                 body = self.replaceSig("/rest/r/ad/task/report", ad['body'])
@@ -228,6 +230,8 @@ class User:
                 "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
                 "User-Agent": "kwai-android aegon/2.12.0",
                 "X-REQUESTID": f"{int(time())*10^8}"}
+            if(not body or not url):
+                continue
             rjson = self.post(url, header=header, body=body)
             if(not rjson):
                 continue
@@ -245,19 +249,23 @@ class User:
         if(not(self.account['gjData']['url'] and self.account['gjData']['body'])):
             print("未填写逛街数据")
             return
-        #签名在链接里
+        # 签名在链接里
         if(self.account['gjData']['url'].find("sig=") > 0):
-            url = self.account['gjData']['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/reward/task/getActivityReward", self.account['gjData']['url'].split("?",2)[1])
+            url = self.account['gjData']['url'].split("?", 2)[0]+"?"+self.replaceSig(
+                "/rest/r/reward/task/getActivityReward", self.account['gjData']['url'].split("?", 2)[1])
             body = self.account['gjData']['body']
-        #签名在请求体里
+        # 签名在请求体里
         else:
             url = self.account['gjData']['url']
-            body = self.replaceSig("/rest/r/reward/task/getActivityReward", self.account['gjData']['body'])
+            body = self.replaceSig(
+                "/rest/r/reward/task/getActivityReward", self.account['gjData']['body'])
         header = {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
             "User-Agent": "kwai-android aegon/2.12.0",
             "X-REQUESTID": f"{int(time())*10^8}"}
+        if(not body or not url):
+            return
         rjson = self.post(url, header=header, body=body)
         if(not rjson):
             return
@@ -266,41 +274,41 @@ class User:
         else:
             print("逛街失败："+rjson['error_msg'])
 
-    #直播
-    def zbTask(self):
-        if("zbData" not in self.account):
-            return
-        dataList = self.account['zbData']
-        if(len(dataList) == 0):
-            print("未填写直播数据")
-            return
-        index = 0
-        for data in dataList:
-            index += 1
-            if(not(data['url'] and data['body'])):
-                continue
-            #签名在链接里
-            if(data['url'].find("sig=") > 0):
-                url = data['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/ad/task/report", data['url'].split("?",2)[1])
-                body = data['body']
-            #签名在请求体里
-            else:
-                url = data['url']
-                body = self.replaceSig("/rest/r/ad/task/report", data['body'])
-            header = {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
-                "User-Agent": "kwai-android aegon/2.12.0",
-                "X-REQUESTID": f"{int(time())*10^8}"}
-            rjson = self.post(url, header=header, body=body)
-            if(not rjson):
-                continue
-            if(rjson['result'] == 1):
-                print(f"执行直播数据[{index}]成功：+{rjson['data']['neoAmount']}金币")
-                print("休息5s...")
-                sleep(5)
-            else:
-                print(f"执行直播数据[{index}]失败："+rjson['error_msg'])
+    # #直播
+    # def zbTask(self):
+    #     if("zbData" not in self.account):
+    #         return
+    #     dataList = self.account['zbData']
+    #     if(len(dataList) == 0):
+    #         print("未填写直播数据")
+    #         return
+    #     index = 0
+    #     for data in dataList:
+    #         index += 1
+    #         if(not(data['url'] and data['body'])):
+    #             continue
+    #         #签名在链接里
+    #         if(data['url'].find("sig=") > 0):
+    #             url = data['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/ad/task/report", data['url'].split("?",2)[1])
+    #             body = data['body']
+    #         #签名在请求体里
+    #         else:
+    #             url = data['url']
+    #             body = self.replaceSig("/rest/r/ad/task/report", data['body'])
+    #         header = {
+    #             "Content-Type": "application/x-www-form-urlencoded",
+    #             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
+    #             "User-Agent": "kwai-android aegon/2.12.0",
+    #             "X-REQUESTID": f"{int(time())*10^8}"}
+    #         rjson = self.post(url, header=header, body=body)
+    #         if(not rjson):
+    #             continue
+    #         if(rjson['result'] == 1):
+    #             print(f"执行直播数据[{index}]成功：+{rjson['data']['neoAmount']}金币")
+    #             print("休息5s...")
+    #             sleep(5)
+    #         else:
+    #             print(f"执行直播数据[{index}]失败："+rjson['error_msg'])
 
     # 金币抽奖签到
     def gameSignIn(self):
@@ -391,35 +399,35 @@ class User:
         else:
             print("抽奖失败："+rjson['error_msg'])
 
-    # 金币抽奖翻倍
-    def gameCoinDouble(self):
-        if("coinDouble" not in self.account):
-            return
-        adList = self.account['coinDouble']
-        if(len(adList) == 0):
-            print("未填写金币抽奖金币翻倍数据")
-            return
-        index = 0
-        for ad in adList:
-            index += 1
-            if(not(ad['url'] and ad['body'])):
-                continue
-            url = "https://api2.e.kuaishou.com/rest/r/ad/task/report?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?",2)[1])
-            if(not url):
-                continue
-            header = {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
-                "User-Agent": "kwai-android aegon/2.12.0",
-                "X-REQUESTID": f"{int(time())*10^8}"}
-            rjson = self.post(url, ad['body'], header=header)
-            if(rjson['result'] == 1):
-                print(f"执行金币翻倍数据[{index}]成功")
-                print(json.dumps(rjson, indent=2))
-                print("休息5s...")
-                sleep(5)
-            else:
-                print(f"执行金币翻倍数据[{index}]失败："+rjson['error_msg'])
+    # # 金币抽奖翻倍
+    # def gameCoinDouble(self):
+    #     if("coinDouble" not in self.account):
+    #         return
+    #     adList = self.account['coinDouble']
+    #     if(len(adList) == 0):
+    #         print("未填写金币抽奖金币翻倍数据")
+    #         return
+    #     index = 0
+    #     for ad in adList:
+    #         index += 1
+    #         if(not(ad['url'] and ad['body'])):
+    #             continue
+    #         url = "https://api2.e.kuaishou.com/rest/r/ad/task/report?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?",2)[1])
+    #         if(not url):
+    #             continue
+    #         header = {
+    #             "Content-Type": "application/x-www-form-urlencoded",
+    #             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
+    #             "User-Agent": "kwai-android aegon/2.12.0",
+    #             "X-REQUESTID": f"{int(time())*10^8}"}
+    #         rjson = self.post(url, ad['body'], header=header)
+    #         if(rjson['result'] == 1):
+    #             print(f"执行金币翻倍数据[{index}]成功")
+    #             print(json.dumps(rjson, indent=2))
+    #             print("休息5s...")
+    #             sleep(5)
+    #         else:
+    #             print(f"执行金币翻倍数据[{index}]失败："+rjson['error_msg'])
 
     # 金币抽奖任务
     def gameTasks(self):
@@ -482,12 +490,11 @@ class User:
                 self.gameInfo()
                 self.gameTimerInfo()
                 self.gameTasks()
-            self.gameCoinDouble()
             print("\n")
 
 
 def initEnv() -> list:
-    global API_URL,API_NAME
+    global API_URL, API_NAME
     accountList = []
     filePath = sys.path[0]
     if(filePath.find("\\") != -1):
