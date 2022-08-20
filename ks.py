@@ -6,7 +6,7 @@ import requests
 
 PROJECT_NAME = "ks"
 API_NAME = "ksApi"
-API_URL = "http://192.168.3.33:8888/ks/sig?str="
+API_URL = "http://127.0.0.1:8888/ks/sig?str="
 
 
 class User:
