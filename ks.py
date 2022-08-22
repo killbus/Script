@@ -274,42 +274,6 @@ class User:
         else:
             print("逛街失败："+rjson['error_msg'])
 
-    # #直播
-    # def zbTask(self):
-    #     if("zbData" not in self.account):
-    #         return
-    #     dataList = self.account['zbData']
-    #     if(len(dataList) == 0):
-    #         print("未填写直播数据")
-    #         return
-    #     index = 0
-    #     for data in dataList:
-    #         index += 1
-    #         if(not(data['url'] and data['body'])):
-    #             continue
-    #         #签名在链接里
-    #         if(data['url'].find("sig=") > 0):
-    #             url = data['url'].split("?",2)[0]+"?"+self.replaceSig("/rest/r/ad/task/report", data['url'].split("?",2)[1])
-    #             body = data['body']
-    #         #签名在请求体里
-    #         else:
-    #             url = data['url']
-    #             body = self.replaceSig("/rest/r/ad/task/report", data['body'])
-    #         header = {
-    #             "Content-Type": "application/x-www-form-urlencoded",
-    #             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
-    #             "User-Agent": "kwai-android aegon/2.12.0",
-    #             "X-REQUESTID": f"{int(time())*10^8}"}
-    #         rjson = self.post(url, header=header, body=body)
-    #         if(not rjson):
-    #             continue
-    #         if(rjson['result'] == 1):
-    #             print(f"执行直播数据[{index}]成功：+{rjson['data']['neoAmount']}金币")
-    #             print("休息5s...")
-    #             sleep(5)
-    #         else:
-    #             print(f"执行直播数据[{index}]失败："+rjson['error_msg'])
-
     # 金币抽奖签到
     def gameSignIn(self):
         url = "https://activity.e.kuaishou.com/rest/r/game/sign-in"
@@ -398,36 +362,6 @@ class User:
                 f"抽奖成功：+{rjson['data']['coinCount']}金币  +{rjson['data']['diamondCount']}钻石")
         else:
             print("抽奖失败："+rjson['error_msg'])
-
-    # # 金币抽奖翻倍
-    # def gameCoinDouble(self):
-    #     if("coinDouble" not in self.account):
-    #         return
-    #     adList = self.account['coinDouble']
-    #     if(len(adList) == 0):
-    #         print("未填写金币抽奖金币翻倍数据")
-    #         return
-    #     index = 0
-    #     for ad in adList:
-    #         index += 1
-    #         if(not(ad['url'] and ad['body'])):
-    #             continue
-    #         url = "https://api2.e.kuaishou.com/rest/r/ad/task/report?"+self.replaceSig("/rest/r/ad/task/report", ad['url'].split("?",2)[1])
-    #         if(not url):
-    #             continue
-    #         header = {
-    #             "Content-Type": "application/x-www-form-urlencoded",
-    #             "X-Client-Info": "model=P40;os=Android;nqe-score=24;network=WIFI;signal-strength=4;",
-    #             "User-Agent": "kwai-android aegon/2.12.0",
-    #             "X-REQUESTID": f"{int(time())*10^8}"}
-    #         rjson = self.post(url, ad['body'], header=header)
-    #         if(rjson['result'] == 1):
-    #             print(f"执行金币翻倍数据[{index}]成功")
-    #             print(json.dumps(rjson, indent=2))
-    #             print("休息5s...")
-    #             sleep(5)
-    #         else:
-    #             print(f"执行金币翻倍数据[{index}]失败："+rjson['error_msg'])
 
     # 金币抽奖任务
     def gameTasks(self):
