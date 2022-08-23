@@ -5,8 +5,10 @@ import requests
 import json
 from urllib import parse
 
-API_URL = "http://127.0.0.1:8888/4399/sig?str="
+API_URL = "http://127.0.0.1:8888/game/sig?str="
+API_URL_NAME = "gameApi"
 COOKIE_NAME = "gameHeaders"
+
 warnings.filterwarnings("ignore")
 
 class User:
@@ -251,6 +253,8 @@ def initEnv():
         cookies = env[COOKIE_NAME]
         if(cookies.find("&")):
             return cookies.split("&")
+    if(API_URL_NAME in env):
+        API_URL = env[API_URL_NAME]
     return []
 
 
