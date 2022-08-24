@@ -118,6 +118,16 @@ class User:
         else:
             print(f"金币兑换现金失败：{rjson['msg']}")
 
+    def addPrice(self,price):
+        url = f"https://json.dd-gz.com/zhuandianshidian/public/api.php/user/addMoney?access=i20180418&appid=2021002117637233&edition=190001&price={price}&token={self.account['token']}&userid={self.account['userid']}"
+        rjson = self.get(url)
+        if(not rjson):
+            return
+        if(rjson['state'] == 1):
+            print("红包提现成功")
+        else:
+            print(f"红包提现失败：{rjson['msg']}")
+
     def run(self):
         print(f"======账号[{self.index}]======")
         if(self.account["remark"]):
@@ -129,6 +139,8 @@ class User:
         self.getSignInfo()
         if(self.coin >= 998):
             self.addMoney(self.coin)
+        if(float(self.cash) > 0):
+            self.addPrice()
         print("\n")
 
 
