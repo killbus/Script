@@ -155,9 +155,6 @@ class User:
                 print("宝箱冷却时间：{0}s".format(
                     rjson['data']['treasureCurrentTaskRemainSeconds']))
                 self.openBox(rjson['data']['token'])
-                sleep(0.1)
-                # 激活宝箱
-                self.getBoxInfo()
             elif(status == 2):
                 print(
                     f"宝箱冷却时间：{rjson['data']['treasureCurrentTaskRemainSeconds']}s")
@@ -173,6 +170,8 @@ class User:
             return
         if(rjson['result'] == 1):
             print("开启宝箱成功：获得{0}金币".format(rjson['data']['rewardCount']))
+            # 激活宝箱
+            self.getBoxInfo()
         else:
             print("开启宝箱失败：{0}".format(rjson['error_msg']))
 
