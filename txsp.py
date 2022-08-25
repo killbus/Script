@@ -18,6 +18,12 @@ COOKIE_NAME = "txspCookie"
 
 class User:
 
+
+    def __init__(self, cookie, index=1) -> None:
+        self.cookie = cookie
+        self.valid = True
+        self.index = index
+
     def get(self, url, header=None):
         headers = {
             "Content-Type": "application/json",
@@ -55,10 +61,6 @@ class User:
             print("POST异常：{0}".format(str(e)))
             return None
 
-    def __init__(self, cookie, index=1) -> None:
-        self.cookie = cookie
-        self.valid = True
-        self.index = index
 
     def vipInfo(self):
         url = "https://vip.video.qq.com/fcgi-bin/comm_cgi?name=spp_SVipInfo&cmd=1&source_scene=4&otype=xjson"
