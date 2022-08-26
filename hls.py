@@ -81,6 +81,7 @@ class User:
                 countdown = rjson['data']['countdown']
                 if(acceptable):
                     print(f"任务[{id}]未领取")
+                    self.advertiseDouble(id)
                     flag = self.advertiseAccept(id)
                     if(flag):
                         self.advertiseProcess(id,4)
@@ -92,7 +93,7 @@ class User:
                         print(f"任务[{id}]已领取")
                         user = rjson['data']['user']
                         currentTimes = user['currentTimes']
-                        if(currentTimes == 4):
+                        if(currentTimes >= 4):
                             print(f"任务[{id}]可领取奖励")
                         else:
                             print(f"任务[{id}]当前已执行次数：{currentTimes}")
@@ -125,6 +126,11 @@ class User:
                 sleep(3)
             else:
                 print(f"任务[{id}]执行失败：{rjson['message']}")
+
+    def advertiseDouble(self,id):
+        url = "http://api.hls178.cn:8080/advertise/awardDouble"
+        body = f"id={id}"
+        self.post(url=url,body=body)
 
     def cash(self,money):
         url = "http://api.hls178.cn:8080/user/cash"
