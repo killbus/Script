@@ -6,6 +6,7 @@ import requests
 
 from SQLHelper import SQLHelper
 
+
 COOKIE_NAME = "hlsToken"
 database = "resource"
 host = "81.68.247.240"
