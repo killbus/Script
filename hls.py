@@ -1,14 +1,15 @@
-import json
+import hashlib
 import os
-from time import sleep
+from time import sleep, time
 import requests
 
 COOKIE_NAME = "hlsToken"
 
-proxies = None
+proxies = {"http":"http://127.0.0.1:1080","https":"http://127.0.0.1:1080"}
+
 
 class User:
-    def __init__(self,token,index=1) -> None:
+    def __init__(self, token, index=1) -> None:
         self.token = token
         self.index = index
         self.valid = True
@@ -41,7 +42,8 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body,headers=headers,proxies=proxies)
+            res = requests.post(
+                url, data=body, headers=headers, proxies=proxies)
             if(res.status_code == 200):
                 return res.json()
             else:
@@ -49,7 +51,14 @@ class User:
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
             return None
-    
+
+    def sign(self, data):
+        md5Salt = "!@#ecommerce%^"
+        data += f"&key={md5Salt}"
+        md5 = hashlib.md5()
+        md5.update(data.encode())
+        return md5.hexdigest()
+
     def getUserInfo(self):
         url = "http://api.hls178.cn:8080/user/info"
         rjson = self.get(url)
@@ -78,7 +87,7 @@ class User:
             print(f"获取用户信息失败：{rjson['message']}")
 
     def advertiseInfo(self):
-        for id in [1,2,3,4,5]:
+        for id in [1, 2, 3, 4, 5]:
             url = f"http://api.hls178.cn:8080/advertise?id={id}"
             rjson = self.get(url)
             if(not rjson):
@@ -86,32 +95,36 @@ class User:
             if(rjson['code'] == 0):
                 acceptable = rjson['data']['acceptable']
                 countdown = rjson['data']['countdown']
+                self.advertiseAward(id)
                 if(acceptable):
                     print(f"任务[{id}]未领取")
-                    self.advertiseDouble(id)
                     flag = self.advertiseAccept(id)
                     if(flag):
-                        self.advertiseProcess(id,4)
+                        self.advertiseProcess(id, 4)
                 else:
-                    if(countdown > 0):
+                    user = rjson['data']['user']
+                    if(countdown > 0):                            
                         print(f"任务[{id}]已领取奖励，等待冷却")
                         print(f"任务[{id}]冷却时间：{countdown}s")
                     else:
                         print(f"任务[{id}]已领取")
-                        user = rjson['data']['user']
+                        
                         currentTimes = user['currentTimes']
                         if(currentTimes >= 4):
                             print(f"任务[{id}]可领取奖励")
                         else:
                             print(f"任务[{id}]当前已执行次数：{currentTimes}")
-                            self.advertiseProcess(id,4)
+                            self.advertiseProcess(id, 4)
+                        code = user['code']
+                        awardType = user['awardType']
+                        self.advertiseFinish(id, code, awardType)
             else:
                 print(f"获取任务[{id}]信息失败：{rjson['message']}")
 
-    def advertiseAccept(self,id):
+    def advertiseAccept(self, id):
         url = f"http://api.hls178.cn:8080/advertise/accept"
         body = f"awardType=1&id={id}"
-        rjson = self.post(url,body=body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return False
         if(rjson['code'] == 0):
@@ -121,11 +134,11 @@ class User:
             print(f"任务[{id}]领取失败：{rjson['message']}")
             return False
 
-    def advertiseProcess(self,id,count):
+    def advertiseProcess(self, id, count):
         url = "http://api.hls178.cn:8080/advertise/process"
         body = f"id={id}"
         for i in range(count):
-            rjson = self.post(url,body=body)
+            rjson = self.post(url, body=body)
             if(not rjson):
                 continue
             if(rjson['code'] == 0):
@@ -134,14 +147,49 @@ class User:
             else:
                 print(f"任务[{id}]执行失败：{rjson['message']}")
 
-    def advertiseDouble(self,id):
+    def advertiseFinish(self, id, code, awardType):
+        url = "http://api.hls178.cn:8080/advertise/finish"
+        ts = int(time()*1000)
+        data = f"awardType={awardType}&code={code}&time={ts}"
+        sign = self.sign(data)
+        body = data+f"&sign={sign}"
+        rjson = self.post(url, body=body)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"任务[{id}]提交成功")
+            sleep(1)
+            self.advertiseAward(id)
+        else:
+            print(f"任务[{id}]提交失败：{rjson['message']}")
+
+    def advertiseAward(self, id):
+        url = "http://api.hls178.cn:8080/advertise/award"
+        body = f"id={id}"
+        rjson = self.post(url=url, body=body)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"任务[{id}]领取奖励成功")
+            sleep(1)
+            self.advertiseDouble(id)
+        else:
+            print(f"任务[{id}]领取奖励失败：{rjson['message']}")
+
+    def advertiseDouble(self, id):
         url = "http://api.hls178.cn:8080/advertise/awardDouble"
         body = f"id={id}"
-        self.post(url=url,body=body)
+        rjson = self.post(url=url, body=body)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"任务[{id}]领取额外奖励成功")
+        else:
+            print(f"任务[{id}]领取额外奖励失败：{rjson['message']}")
 
     def ticketInfo(self):
         url = "http://api.hls178.cn:8080/ticket"
-        rjson = self.get(url = url)
+        rjson = self.get(url=url)
         if(not rjson):
             self.ticketValid = False
             return
@@ -155,7 +203,7 @@ class User:
 
     def ticketSignInfo(self):
         url = "http://api.hls178.cn:8080/sign/index"
-        rjson = self.get(url = url)
+        rjson = self.get(url=url)
         if(not rjson):
             return
         if(rjson['code'] == 0):
@@ -170,7 +218,7 @@ class User:
 
     def ticketSign(self):
         url = "http://api.hls178.cn:8080/sign"
-        rjson = self.post(url = url)
+        rjson = self.post(url=url)
         if(not rjson):
             return
         if(rjson['code'] == 0):
@@ -178,10 +226,10 @@ class User:
         else:
             print(f"签到失败：{rjson['message']}")
 
-    def cash(self,money):
+    def cash(self, money):
         url = "http://api.hls178.cn:8080/user/cash"
         body = f"money={money}"
-        rjson = self.post(url,body=body)
+        rjson = self.post(url, body=body)
         if(not rjson):
             return
         if(rjson['code'] == 0):
@@ -205,6 +253,7 @@ class User:
             self.cash(self.money)
         print("\n")
 
+
 def initEnv():
     env = os.environ
     if(COOKIE_NAME in env):
@@ -212,12 +261,15 @@ def initEnv():
         if(cookies.find("&")):
             return cookies.split("&")
     res = []
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MTQsImV4cCI6MTY5MzIwNjU2NiwiaXNzIjoiaHpxIn0.BAizyzT5uKdCZr1dx74sAu2Apbnc96NgrmGXo28OgKQ")
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MTcsImV4cCI6MTY5MzIwNjQwNSwiaXNzIjoiaHpxIn0.PqFkZvIQCQsTZCIXuYflAK1jx5Ey-hp3HWCzWbhT4Jk")
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MzMsImV4cCI6MTY5MzIwNTgwOCwiaXNzIjoiaHpxIn0.h3dxlX4utaV8jz_7FCyN6Os2s-kGaEzyVjOxCydfdfg")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjQxMDQsImV4cCI6MTY5Mjk2MDExOCwiaXNzIjoiaHpxIn0.cHuEhdwsoLwflSGu6JgTT1wzKBcp0rwwv8qEG5pJDjY")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjI5ODcsImV4cCI6MTY5MjkzNjgwMiwiaXNzIjoiaHpxIn0.bhh0M9vRmT9VwowsBdyMNLLF8jvE21XgCyw9CDmpKBY")
-    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjIxODQsImV4cCI6MTY5MjkzMDYwNywiaXNzIjoiaHpxIn0.3COVDlgEyKUnPVZZaWNPV8o1dBLHxDAdno0UBFJ7y-s")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjM3ODAsImV4cCI6MTY5Mjk1NDM1MCwiaXNzIjoiaHpxIn0.JkqwpAqT7o15rUGS7wvuDO7hdBerqdF_pz9-Eq8B72w")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjY0NTcsImV4cCI6MTY5MzExMDg0MSwiaXNzIjoiaHpxIn0.Xc8lXYafL0BwNFymSeDqAVZm7Y2D--owRh0GjVyNuNU")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjY0NTUsImV4cCI6MTY5MzExMTQzMiwiaXNzIjoiaHpxIn0.M7iUhzu5VsA7zsw2-qpvhLPOdFROAvp_QsY1cA2cEqE")
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjIxODQsImV4cCI6MTY5MjkzMDYwNywiaXNzIjoiaHpxIn0.3COVDlgEyKUnPVZZaWNPV8o1dBLHxDAdno0UBFJ7y-s")
     return res
 
 
@@ -227,7 +279,7 @@ if __name__ == "__main__":
     index = 1
     for data in datas:
         users.append(User(data, index))
-        index +=1
+        index += 1
     for user in users:
         try:
             user.run()
