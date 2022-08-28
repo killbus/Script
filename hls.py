@@ -169,8 +169,8 @@ class User:
             if(not rjson):
                 continue
             if(rjson['code'] == 0):
-                print(f"任务[{id}]执行成功,等待3s...")
-                sleep(3)
+                print(f"任务[{id}]执行成功,等待1s...")
+                sleep(1)
             else:
                 print(f"任务[{id}]执行失败：{rjson['message']}")
 
