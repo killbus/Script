@@ -1,19 +1,41 @@
 import hashlib
 import os
+from random import randint
 from time import sleep, time
 import requests
 
+from SQLHelper import SQLHelper
+
 COOKIE_NAME = "hlsToken"
-
-proxies = None
-
+database = "resource"
+host = "81.68.247.240"
+user = "resource"
+password = "cTAenenXhFNHyk7x"
 
 class User:
     def __init__(self, token, index=1) -> None:
         self.token = token
         self.index = index
         self.valid = True
+        self.proxies = self.getProxies()
 
+    def getProxies(self):
+        result = []
+        try:
+            db = SQLHelper(database=database, host=host, user=user, password=password)
+            fields = ["ip", "port"]
+            cls = db.setTable("proxies").setFields(fields).query()
+            db.close()
+            for cl in cls:
+                url = f"http://{cl[0]}:{cl[1]}"
+                result.append({"http": url, "https": url})
+            result.append(None)
+            return result
+        except Exception as e:
+            print(f"获取代理失败：{str(e)}")
+            result.append(None)
+            return result
+        
     def get(self, url, header=None):
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -23,7 +45,7 @@ class User:
         if(header):
             headers.update(header)
         try:
-            res = requests.get(url, headers=headers)
+            res = requests.get(url, headers=headers,timeout=5)
             if(res.status_code == 200):
                 return res.json()
             else:
@@ -32,7 +54,7 @@ class User:
             print("GET异常：{0}".format(str(e)))
             return None
 
-    def post(self, url, body='', header=None):
+    def post(self, url, body='', header=None,proxies = None):
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; P40 Build/N6F26Q; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/81.0.4044.117 Mobile Safari/537.36 uni-app Html5Plus/1.0 (Immersed/24.0)",
@@ -43,7 +65,7 @@ class User:
         # 捕获异常
         try:
             res = requests.post(
-                url, data=body, headers=headers, proxies=proxies)
+                url, data=body, headers=headers, proxies=proxies,timeout=5)
             if(res.status_code == 200):
                 return res.json()
             else:
@@ -126,7 +148,9 @@ class User:
     def advertiseAccept(self, id):
         url = f"http://api.hls178.cn:8080/advertise/accept"
         body = f"awardType=1&id={id}"
-        rjson = self.post(url, body=body)
+        #使用代理进行请求
+        proxies = self.proxies[randint(0,len(self.proxies)-1)]
+        rjson = self.post(url, body=body,proxies = proxies)
         if(not rjson):
             return False
         if(rjson['code'] == 0):
@@ -231,7 +255,9 @@ class User:
     def cash(self, money):
         url = "http://api.hls178.cn:8080/user/cash"
         body = f"money={money}"
-        rjson = self.post(url, body=body)
+        #使用代理进行请求
+        proxies = self.proxies[randint(0,len(self.proxies)-1)]
+        rjson = self.post(url, body=body,proxies = proxies)
         if(not rjson):
             return
         if(rjson['code'] == 0):
