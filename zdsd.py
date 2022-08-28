@@ -139,8 +139,8 @@ class User:
         self.getSignInfo()
         if(self.coin >= 998):
             self.addMoney(self.coin)
-        if(float(self.cash) > 0):
-            self.addPrice()
+        # if(float(self.cash) > 0):
+        #     self.addPrice(self.cash)
         print("\n")
 
 

@@ -1,10 +1,10 @@
-import json
 import os
 from time import sleep
 import requests
 
 COOKIE_NAME = "hlsToken"
 
+proxies = None
 
 class User:
     def __init__(self,token,index=1) -> None:
@@ -22,7 +22,10 @@ class User:
             headers.update(header)
         try:
             res = requests.get(url, headers=headers)
-            return res.json()
+            if(res.status_code == 200):
+                return res.json()
+            else:
+                return None
         except Exception as e:
             print("GET异常：{0}".format(str(e)))
             return None
@@ -37,8 +40,11 @@ class User:
             headers.update(header)
         # 捕获异常
         try:
-            res = requests.post(url, data=body, headers=headers)
-            return res.json()
+            res = requests.post(url, data=body,headers=headers,proxies=proxies)
+            if(res.status_code == 200):
+                return res.json()
+            else:
+                return None
         except Exception as e:
             print("POST异常：{0}".format(str(e)))
             return None
@@ -166,6 +172,8 @@ def initEnv():
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjI5ODcsImV4cCI6MTY5MjkzNjgwMiwiaXNzIjoiaHpxIn0.bhh0M9vRmT9VwowsBdyMNLLF8jvE21XgCyw9CDmpKBY")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjIxODQsImV4cCI6MTY5MjkzMDYwNywiaXNzIjoiaHpxIn0.3COVDlgEyKUnPVZZaWNPV8o1dBLHxDAdno0UBFJ7y-s")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjM3ODAsImV4cCI6MTY5Mjk1NDM1MCwiaXNzIjoiaHpxIn0.JkqwpAqT7o15rUGS7wvuDO7hdBerqdF_pz9-Eq8B72w")
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjY0NTcsImV4cCI6MTY5MzExMDg0MSwiaXNzIjoiaHpxIn0.Xc8lXYafL0BwNFymSeDqAVZm7Y2D--owRh0GjVyNuNU")
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjY0NTUsImV4cCI6MTY5MzExMTQzMiwiaXNzIjoiaHpxIn0.M7iUhzu5VsA7zsw2-qpvhLPOdFROAvp_QsY1cA2cEqE")
     return res
 
 
