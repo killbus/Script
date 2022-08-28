@@ -1,3 +1,4 @@
+import json
 import os
 from time import sleep
 import requests
@@ -77,7 +78,7 @@ class User:
             print(f"获取用户信息失败：{rjson['message']}")
 
     def advertiseInfo(self):
-        for id in [1,2]:
+        for id in [1,2,3,4,5]:
             url = f"http://api.hls178.cn:8080/advertise?id={id}"
             rjson = self.get(url)
             if(not rjson):
@@ -138,6 +139,45 @@ class User:
         body = f"id={id}"
         self.post(url=url,body=body)
 
+    def ticketInfo(self):
+        url = "http://api.hls178.cn:8080/ticket"
+        rjson = self.get(url = url)
+        if(not rjson):
+            self.ticketValid = False
+            return
+        if(rjson['code'] == 0):
+            print(f"积累门票：{rjson['data']['historyNumber']}张")
+            print(f"当前门票：{rjson['data']['number']}张")
+            self.ticketValid = True
+        else:
+            self.ticketValid = False
+            print(f"获取抽奖信息失败：{rjson['message']}")
+
+    def ticketSignInfo(self):
+        url = "http://api.hls178.cn:8080/sign/index"
+        rjson = self.get(url = url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"签到天数：{rjson['data']['days']}")
+            if(rjson['data']['signed']):
+                print("今日已签到")
+            else:
+                print("今日未签到")
+                self.ticketSign()
+        else:
+            print(f"获取抽奖签到信息失败：{rjson['message']}")
+
+    def ticketSign(self):
+        url = "http://api.hls178.cn:8080/sign"
+        rjson = self.post(url = url)
+        if(not rjson):
+            return
+        if(rjson['code'] == 0):
+            print(f"签到成功：+{rjson['data']['number']}张")
+        else:
+            print(f"签到失败：{rjson['message']}")
+
     def cash(self,money):
         url = "http://api.hls178.cn:8080/user/cash"
         body = f"money={money}"
@@ -157,7 +197,11 @@ class User:
         print("")
         self.advertiseInfo()
         print("")
+        self.ticketSignInfo()
+        print("")
+        self.ticketInfo()
         if(self.bindCash and self.money >= 10):
+            print("")
             self.cash(self.money)
         print("\n")
 
