@@ -5,7 +5,7 @@ import requests
 
 COOKIE_NAME = "hlsToken"
 
-proxies = {"http":"http://127.0.0.1:1080","https":"http://127.0.0.1:1080"}
+proxies = None
 
 
 class User:
@@ -93,6 +93,8 @@ class User:
             if(not rjson):
                 continue
             if(rjson['code'] == 0):
+                if(not rjson['data']):
+                    continue
                 acceptable = rjson['data']['acceptable']
                 countdown = rjson['data']['countdown']
                 self.advertiseAward(id)
