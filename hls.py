@@ -8,10 +8,12 @@ from SQLHelper import SQLHelper
 
 
 COOKIE_NAME = "hlsToken"
+cashTime = 12
 database = "resource"
 host = "81.68.247.240"
 user = "resource"
 password = "cTAenenXhFNHyk7x"
+
 
 class User:
     def __init__(self, token, index=1) -> None:
@@ -23,7 +25,8 @@ class User:
     def getProxies(self):
         result = []
         try:
-            db = SQLHelper(database=database, host=host, user=user, password=password)
+            db = SQLHelper(database=database, host=host,
+                           user=user, password=password)
             fields = ["ip", "port"]
             cls = db.setTable("proxies").setFields(fields).query()
             db.close()
@@ -36,7 +39,7 @@ class User:
             print(f"获取代理失败：{str(e)}")
             result.append(None)
             return result
-        
+
     def get(self, url, header=None):
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -46,7 +49,7 @@ class User:
         if(header):
             headers.update(header)
         try:
-            res = requests.get(url, headers=headers,timeout=5)
+            res = requests.get(url, headers=headers, timeout=5)
             if(res.status_code == 200):
                 return res.json()
             else:
@@ -55,7 +58,7 @@ class User:
             print("GET异常：{0}".format(str(e)))
             return None
 
-    def post(self, url, body='', header=None,proxies = None):
+    def post(self, url, body='', header=None, proxies=None):
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; P40 Build/N6F26Q; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/81.0.4044.117 Mobile Safari/537.36 uni-app Html5Plus/1.0 (Immersed/24.0)",
@@ -66,7 +69,7 @@ class User:
         # 捕获异常
         try:
             res = requests.post(
-                url, data=body, headers=headers, proxies=proxies,timeout=5)
+                url, data=body, headers=headers, proxies=proxies, timeout=5)
             if(res.status_code == 200):
                 return res.json()
             else:
@@ -128,12 +131,12 @@ class User:
                         self.advertiseProcess(id, 4)
                 else:
                     user = rjson['data']['user']
-                    if(countdown > 0):                            
+                    if(countdown > 0):
                         print(f"任务[{id}]已领取奖励，等待冷却")
                         print(f"任务[{id}]冷却时间：{countdown}s")
                     else:
                         print(f"任务[{id}]已领取")
-                        
+
                         currentTimes = user['currentTimes']
                         if(currentTimes >= 4):
                             print(f"任务[{id}]可领取奖励")
@@ -149,9 +152,9 @@ class User:
     def advertiseAccept(self, id):
         url = f"http://api.hls178.cn:8080/advertise/accept"
         body = f"awardType=1&id={id}"
-        #使用代理进行请求
-        proxies = self.proxies[randint(0,len(self.proxies)-1)]
-        rjson = self.post(url, body=body,proxies = proxies)
+        # 使用代理进行请求
+        proxies = self.proxies[randint(0, len(self.proxies)-1)]
+        rjson = self.post(url, body=body, proxies=proxies)
         if(not rjson):
             return False
         if(rjson['code'] == 0):
@@ -256,9 +259,9 @@ class User:
     def cash(self, money):
         url = "http://api.hls178.cn:8080/user/cash"
         body = f"money={money}"
-        #使用代理进行请求
-        proxies = self.proxies[randint(0,len(self.proxies)-1)]
-        rjson = self.post(url, body=body,proxies = proxies)
+        # 使用代理进行请求
+        proxies = self.proxies[randint(0, len(self.proxies)-1)]
+        rjson = self.post(url, body=body, proxies=proxies)
         if(not rjson):
             return
         if(rjson['code'] == 0):
@@ -287,8 +290,7 @@ def initEnv():
     env = os.environ
     if(COOKIE_NAME in env):
         cookies = env[COOKIE_NAME]
-        if(cookies.find("&")):
-            return cookies.split("&")
+        return cookies.split("&")
     res = []
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MTQsImV4cCI6MTY5MzIwNjU2NiwiaXNzIjoiaHpxIn0.BAizyzT5uKdCZr1dx74sAu2Apbnc96NgrmGXo28OgKQ")
     res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MTcsImV4cCI6MTY5MzIwNjQwNSwiaXNzIjoiaHpxIn0.PqFkZvIQCQsTZCIXuYflAK1jx5Ey-hp3HWCzWbhT4Jk")
@@ -303,12 +305,13 @@ def initEnv():
 
 
 if __name__ == "__main__":
-    datas = initEnv()
+    tokens = initEnv()
     users = []
     index = 1
-    for data in datas:
-        users.append(User(data, index))
-        index += 1
+    for token in tokens:
+        if(token):
+            users.append(User(token, index))
+            index += 1
     for user in users:
         try:
             user.run()

@@ -295,13 +295,14 @@ class SQLHelper:
             self.db.commit()
             return cursor
         except Exception as e:
+            print("======SQL ERROR======")
+            print(sql)
             print(str(e))
             return None
 
 
 if __name__ == "__main__":
-    db = SQLHelper("source")
-    wheres = [["ip", "=", 1], ['port', "=", 2]]
+    pass
     # # 插入-字典形式
     # proxy = {"ip": "127.0.0.1", "port": 10002}
     # db.setTable("proxies").setObj(proxy).insert()
