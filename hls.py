@@ -126,7 +126,11 @@ class User:
                 self.advertiseAward(id)
                 if(acceptable):
                     print(f"任务[{id}]未领取")
-                    flag = self.advertiseAccept(id)
+                    if(id > 3):
+                        flag = self.advertiseAccept(id,2)
+                    else:
+                        flag = self.advertiseAccept(id,1)
+                
                     if(flag):
                         self.advertiseProcess(id, 4)
                 else:
@@ -149,9 +153,9 @@ class User:
             else:
                 print(f"获取任务[{id}]信息失败：{rjson['message']}")
 
-    def advertiseAccept(self, id):
+    def advertiseAccept(self, id,awardType =1):
         url = f"http://api.hls178.cn:8080/advertise/accept"
-        body = f"awardType=1&id={id}"
+        body = f"awardType={awardType}&id={id}"
         # 使用代理进行请求
         proxies = self.proxies[randint(0, len(self.proxies)-1)]
         rjson = self.post(url, body=body, proxies=proxies)
