@@ -14,7 +14,6 @@ host = "81.68.247.240"
 user = "resource"
 password = "cTAenenXhFNHyk7x"
 
-
 class User:
     def __init__(self, token, index=1) -> None:
         self.token = token
@@ -126,13 +125,9 @@ class User:
                 self.advertiseAward(id)
                 if(acceptable):
                     print(f"任务[{id}]未领取")
-                    if(id > 3):
-                        flag = self.advertiseAccept(id,2)
-                    else:
-                        flag = self.advertiseAccept(id,1)
-                
-                    if(flag):
-                        self.advertiseProcess(id, 4)
+                    flag = self.advertiseAccept(id,1)                
+                    # if(flag):
+                    #     self.advertiseProcess(id, 4)
                 else:
                     user = rjson['data']['user']
                     if(countdown > 0):
@@ -146,7 +141,7 @@ class User:
                             print(f"任务[{id}]可领取奖励")
                         else:
                             print(f"任务[{id}]当前已执行次数：{currentTimes}")
-                            self.advertiseProcess(id, 4)
+                            # self.advertiseProcess(id, 4)
                         code = user['code']
                         awardType = user['awardType']
                         self.advertiseFinish(id, code, awardType)
@@ -296,6 +291,7 @@ def initEnv():
         cookies = env[COOKIE_NAME]
         return cookies.split("&")
     res = []
+    res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MzI1MjQsImV4cCI6MTY5MzI2OTEyMCwiaXNzIjoiaHpxIn0.gEZcPP1qYnkeoMpqTUDINHmRA6TTXdaRjbOOWt3FhE4")
     return res
 
 

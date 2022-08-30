@@ -1,11 +1,5 @@
 # -*- encoding: utf-8 -*-
-'''
-@项目名称：   ydyp.py
-@版本号  ：   1.2
-@环境变量：   
-@更新内容：   更新日任务;云朵作战兑换次数
-'''
-from datetime import datetime
+
 import hashlib
 import sys
 from time import sleep
