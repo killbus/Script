@@ -296,15 +296,6 @@ def initEnv():
         cookies = env[COOKIE_NAME]
         return cookies.split("&")
     res = []
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MTQsImV4cCI6MTY5MzIwNjU2NiwiaXNzIjoiaHpxIn0.BAizyzT5uKdCZr1dx74sAu2Apbnc96NgrmGXo28OgKQ")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MTcsImV4cCI6MTY5MzIwNjQwNSwiaXNzIjoiaHpxIn0.PqFkZvIQCQsTZCIXuYflAK1jx5Ey-hp3HWCzWbhT4Jk")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6Mjg5MzMsImV4cCI6MTY5MzIwNTgwOCwiaXNzIjoiaHpxIn0.h3dxlX4utaV8jz_7FCyN6Os2s-kGaEzyVjOxCydfdfg")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjQxMDQsImV4cCI6MTY5Mjk2MDExOCwiaXNzIjoiaHpxIn0.cHuEhdwsoLwflSGu6JgTT1wzKBcp0rwwv8qEG5pJDjY")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjI5ODcsImV4cCI6MTY5MjkzNjgwMiwiaXNzIjoiaHpxIn0.bhh0M9vRmT9VwowsBdyMNLLF8jvE21XgCyw9CDmpKBY")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjM3ODAsImV4cCI6MTY5Mjk1NDM1MCwiaXNzIjoiaHpxIn0.JkqwpAqT7o15rUGS7wvuDO7hdBerqdF_pz9-Eq8B72w")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjY0NTcsImV4cCI6MTY5MzExMDg0MSwiaXNzIjoiaHpxIn0.Xc8lXYafL0BwNFymSeDqAVZm7Y2D--owRh0GjVyNuNU")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjY0NTUsImV4cCI6MTY5MzExMTQzMiwiaXNzIjoiaHpxIn0.M7iUhzu5VsA7zsw2-qpvhLPOdFROAvp_QsY1cA2cEqE")
-    #res.append("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MjIxODQsImV4cCI6MTY5MjkzMDYwNywiaXNzIjoiaHpxIn0.3COVDlgEyKUnPVZZaWNPV8o1dBLHxDAdno0UBFJ7y-s")
     return res
 
 
